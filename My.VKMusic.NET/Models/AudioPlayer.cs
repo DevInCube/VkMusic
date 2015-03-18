@@ -1,4 +1,5 @@
-﻿using NAudio.Wave;
+﻿using My.VKMusic.ViewModels;
+using NAudio.Wave;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,25 +8,46 @@ using System.Threading.Tasks;
 
 namespace My.VKMusic.Models
 {
-    public class AudioFile : IDisposable
+    public class AudioPlayer : IDisposable
     {
 
-        private AudioFileInfo audioInfo;
+        private AudioFile audio;
 
         private IWavePlayer waveOutDevice;
         private AudioFileReader audioFileReader;
 
-        public AudioFile(AudioFileInfo info)
+        public AudioPlayer()
         {
-            this.audioInfo = info;
+            //
+        }
+
+        public void Init(AudioFile info)
+        {
+            PlaybackState state = waveOutDevice == null ? PlaybackState.Stopped : waveOutDevice.PlaybackState;
+            Dispose();
+            this.audio = info;
+            audioFileReader = audio.GetReader();
+            waveOutDevice = new WaveOut();
+            waveOutDevice.Init(audioFileReader);
+            if (state == PlaybackState.Playing) this.Play();
         }
 
         public void Play()
         {
-            waveOutDevice = new WaveOut();
-            audioFileReader = new AudioFileReader(audioInfo.URL);
-            waveOutDevice.Init(audioFileReader);
             waveOutDevice.Play();
+            audio.IsPlaying = true;
+        }
+
+        public void Stop()
+        {
+            waveOutDevice.Stop();
+            audio.IsPlaying = false;
+        }
+
+        public void Pause()
+        {
+            waveOutDevice.Pause();
+            audio.IsPlaying = false;
         }
 
         public void Dispose()
@@ -33,6 +55,7 @@ namespace My.VKMusic.Models
             if (waveOutDevice != null)
             {
                 waveOutDevice.Stop();
+                audio.IsPlaying = false;
             }
             if (audioFileReader != null)
             {

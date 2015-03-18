@@ -64,11 +64,16 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Models\AudioFile.cs" />
+    <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="Models\AudioPlayer.cs" />
     <Compile Include="Models\AudioFileInfo.cs" />
     <Compile Include="Models\AuthData.cs" />
-    <Compile Include="Views\testWindow.xaml.cs">
-      <DependentUpon>testWindow.xaml</DependentUpon>
+    <Compile Include="ViewModels\AudioFile.cs" />
+    <Compile Include="ViewModels\ObservableObject.cs" />
+    <Compile Include="ViewModels\RelayCommand.cs" />
+    <Compile Include="ViewModels\SimpleCommand.cs" />
+    <Compile Include="Views\TestWindow.xaml.cs">
+      <DependentUpon>TestWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="VkAPI.cs" />
     <Page Include="Views\MainWindow.xaml">
@@ -83,7 +88,7 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Views\testWindow.xaml">
+    <Page Include="Views\TestWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

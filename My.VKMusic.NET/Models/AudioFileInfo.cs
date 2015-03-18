@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using My.VKMusic.Extensions;
 
 namespace My.VKMusic.Models
 {
@@ -24,8 +25,8 @@ namespace My.VKMusic.Models
             return new AudioFileInfo()
             {
                 Id = token["aid"].Value<long>(),
-                Artist = token["artist"].Value<string>(),
-                Title = token["title"].Value<string>(),
+                Artist = token["artist"].Value<string>().AsUTF8(),
+                Title = token["title"].Value<string>().AsUTF8(),
                 URL = token["url"].Value<string>(),
             };
         }

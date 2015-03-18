@@ -17,15 +17,15 @@ namespace My.VKMusic.NET
     {
         private void Application_Startup(object sender, StartupEventArgs e)
         {
+            TestWindow playerWindow = new TestWindow();
+            playerWindow.Show();
+
             VkAPI vk = new VkAPI();
             vk.DoAuth(() => {
                 var audios = vk.AudioGet();
-                AudioFile audio = new AudioFile(audios[0]);
-                audio.Play();
-                return;
+                playerWindow.InitAudioList(audios);
             });
-            testWindow w = new testWindow();
-            w.Show();
+            
         }
     }
 }
