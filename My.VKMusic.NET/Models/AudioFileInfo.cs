@@ -28,6 +28,7 @@ namespace My.VKMusic.Models
                 Artist = token["artist"].Value<string>().AsUTF8(),
                 Title = token["title"].Value<string>().AsUTF8(),
                 URL = token["url"].Value<string>(),
+                Duration = token["duration"].Value<long>(),
             };
         }
 

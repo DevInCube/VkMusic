@@ -14,5 +14,10 @@ namespace My.VKMusic.Extensions
             byte[] bytes = Encoding.Default.GetBytes(str);
             return Encoding.UTF8.GetString(bytes);
         }
+
+        public static string Format(this string format, params object[] objs)
+        {
+            return String.Format(format, objs);
+        }
     }
 }

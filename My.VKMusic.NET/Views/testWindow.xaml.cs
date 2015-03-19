@@ -35,7 +35,13 @@ namespace My.VKMusic.Views
 
         public AudioFile SelectedAudio { 
             get { return _SelectedAudio; }
-            set { _SelectedAudio = value; InitAudio(_SelectedAudio); OnPropertyChanged("SelectedAudio"); }
+            set {
+                if (_SelectedAudio != null) SelectedAudio.IsSelected = false;
+                _SelectedAudio = value;
+                _SelectedAudio.IsSelected = true;
+                InitAudio(_SelectedAudio); 
+                OnPropertyChanged("SelectedAudio"); 
+            }
         }
         public ObservableCollection<AudioFile> AudioList { get; set; }
 
@@ -44,7 +50,7 @@ namespace My.VKMusic.Views
             InitializeComponent();
 
             player = new AudioPlayer();
-            AudioList = new ObservableCollection<AudioFile>();
+            AudioList = new ObservableCollection<AudioFile>();            
             PlayCommand = new SimpleCommand(() => { player.Play(); });
             PauseCommand = new SimpleCommand(() => { player.Pause(); });
             PrevCommand = new SimpleCommand(() => { SelectedAudio = GetPrevAudio(); });
