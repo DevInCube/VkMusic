@@ -204,6 +204,25 @@ namespace VkNET
             var res = GetJSONResponse(request)["response"];
         }
 
+        public List<AudioAlbumInfo> AudioGetAlbums()
+        {
+            var parameters = new ParametersCollection() {
+                {"offset", 0},
+                {"count", 10},
+            };
+            string request = CreateMethodRequest("audio.getAlbums", parameters);
+            var res = GetJSONResponse(request)["response"];
+
+            List<AudioAlbumInfo> albums = new List<AudioAlbumInfo>();
+            for (int i = 0; i < res.Count() - 1; i++)
+            {
+                JToken albumToken = res[i + 1];
+                AudioAlbumInfo af = AudioAlbumInfo.FromJson(albumToken);
+                albums.Add(af);
+            }
+            return albums;
+        }
+
         public long AudioAddAlbum(string title)
         {
             var parameters = new ParametersCollection() {
@@ -212,6 +231,43 @@ namespace VkNET
             string request = CreateMethodRequest("audio.addAlbum", parameters);
             var res = GetJSONResponse(request)["response"];
             return res["album_id"].Value<long>();
+        }
+
+        public void AudioDeleteAlbum(long album_id)
+        {
+            var parameters = new ParametersCollection() {
+                {"album_id", album_id},
+            };
+            string request = CreateMethodRequest("audio.deleteAlbum", parameters);
+            var j = GetJSONResponse(request);
+            CheckForGlobalError(j);
+            var res = j["response"];
+            long settingValue = res.Value<long>(); //@todo = 1
+        }
+
+        private void CheckForGlobalError(JToken res)
+        {
+            var error = res["error"];
+            if (error != null)
+            {
+                int error_code = error["error_code"].Value<int>();
+                string error_msg = error["error_msg"].Value<string>();
+                VkException ex = null;
+                switch (error_code)
+                {
+                    case (1): ex = new UnknownVkException(error_msg); break;
+                    case (15): ex = new AccessDeniedVkException(error_msg); break;
+                    case (201): ex = new AccessToAudioDeniedVkException(error_msg); break;
+                }
+                var request_params = error["request_params"] as JArray;
+                foreach (var item in request_params)
+                {
+                    string key = item["key"].Value<string>();
+                    string val = item["value"].Value<string>().AsUTF8();
+                    ex.Data[key] = val;
+                }
+                throw ex;
+            }
         }
         
     }
