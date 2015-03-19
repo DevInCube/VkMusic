@@ -67,13 +67,14 @@ namespace VkNET
         {
             NameValueCollection qscoll = HttpUtility.ParseQueryString(url);
             if (qscoll["error"] != null)
-                throw new AccessDeniedVkException(qscoll["error_description"]);
+                throw new AccessDeniedVkException(qscoll["error_description"]);            
             AuthData data = new AuthData()
             {
                 AccessToken = qscoll["#access_token"],
                 ExpiresIn = long.Parse(qscoll["expires_in"]),
                 UserId = long.Parse(qscoll["user_id"]),
             };
+            data.ExpiresAt = DateTime.Now.AddSeconds(data.ExpiresIn);
             return data;
         }
 
@@ -183,6 +184,16 @@ namespace VkNET
             var res = GetJSONResponse(request)["response"];
 
             return ToList(res);
+        }
+
+        public long AudioAddAlbum(string title)
+        {
+            var parameters = new ParametersCollection() {
+                {"title", title},
+            };
+            string request = CreateMethodRequest("audio.addAlbum", parameters);
+            var res = GetJSONResponse(request)["response"];
+            return res["album_id"].Value<long>();
         }
         
     }
