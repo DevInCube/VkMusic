@@ -40,8 +40,7 @@ namespace My.VKMusic.Views
             get { return _SelectedAudio; }
             set {
                 if (_SelectedAudio != null) SelectedAudio.IsSelected = false;
-                _SelectedAudio = value;
-                vk.AudioSetBroadcast(SelectedAudio.Info.Id);
+                _SelectedAudio = value;               
                 _SelectedAudio.IsSelected = true;
                 InitAudio(_SelectedAudio); 
                 OnPropertyChanged("SelectedAudio"); 
@@ -56,13 +55,25 @@ namespace My.VKMusic.Views
             this.vk = vk;
             player = new AudioPlayer();
             AudioList = new ObservableCollection<AudioFile>();            
-            PlayCommand = new SimpleCommand(() => { player.Play(); });
-            PauseCommand = new SimpleCommand(() => { player.Pause(); });
+            PlayCommand = new SimpleCommand(Play);
+            PauseCommand = new SimpleCommand(Pause);
             PrevCommand = new SimpleCommand(() => { SelectedAudio = GetPrevAudio(); });
             NextCommand = new SimpleCommand(() => { SelectedAudio = GetNextAudio(); });
-            PlayAudioCommand = new RelayCommand((audio) => { SelectedAudio = audio as AudioFile; player.Play(); });
+            PlayAudioCommand = new RelayCommand((audio) => { SelectedAudio = audio as AudioFile; Play(); });
 
             this.DataContext = this;
+        }
+
+        void Play()
+        {
+            player.Play();
+            vk.AudioSetBroadcast(SelectedAudio.Info.Id);
+        }
+
+        void Pause()
+        {
+            player.Pause();
+            vk.AudioRemoveBroadcast();
         }
 
         public AudioFile GetPrevAudio()

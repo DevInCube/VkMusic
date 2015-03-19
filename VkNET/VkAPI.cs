@@ -78,9 +78,11 @@ namespace VkNET
             return data;
         }
 
-        string CreateMethodRequest(string method_name, ParametersCollection parameters)
+        string CreateMethodRequest(string method_name, ParametersCollection parameters = null)
         {
             string methodUri = "https://api.vk.com/method/";
+            if (parameters == null)
+                parameters = new ParametersCollection();
             parameters["access_token"] = authData.AccessToken;
             return String.Format("{0}{1}?{2}", methodUri, method_name, parameters.ToString());
         }
@@ -194,6 +196,12 @@ namespace VkNET
             string request = CreateMethodRequest("audio.setBroadcast", parameters);
             var res = GetJSONResponse(request)["response"];
             long settingValue = res[0].Value<long>(); //@todo
+        }
+
+        public void AudioRemoveBroadcast()
+        {
+            string request = CreateMethodRequest("audio.setBroadcast");
+            var res = GetJSONResponse(request)["response"];
         }
 
         public long AudioAddAlbum(string title)
