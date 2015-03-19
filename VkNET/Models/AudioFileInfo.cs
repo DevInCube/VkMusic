@@ -19,6 +19,11 @@ namespace VkNET.Models
         public long LyricsId { get; set; }
         public long GenreId { get; set; }
 
+        public override string ToString()
+        {
+            return "{0} - {1}".FormatWith(Artist, Title);
+        }
+
         public static AudioFileInfo FromJson(JToken token)
         {
             return new AudioFileInfo()

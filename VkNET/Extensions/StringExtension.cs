@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace VkNET.Extensions
 {
-    public static class StringExtensions
+    public static class StringExtension
     {
 
         public static string AsUTF8(this string str)
@@ -15,7 +15,7 @@ namespace VkNET.Extensions
             return Encoding.UTF8.GetString(bytes);
         }
 
-        public static string Format(this string format, params object[] objs)
+        public static string FormatWith(this string format, params object[] objs)
         {
             return String.Format(format, objs);
         }

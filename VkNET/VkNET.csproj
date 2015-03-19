@@ -46,9 +46,15 @@
     <Compile Include="Auth\IAuthProvider.cs" />
     <Compile Include="Exceptions\AccessDeniedVkException.cs" />
     <Compile Include="Exceptions\VkException.cs" />
-    <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="Extensions\BoolExtension.cs" />
+    <Compile Include="Extensions\StringExtension.cs" />
     <Compile Include="Models\AudioFileInfo.cs" />
+    <Compile Include="Models\AudioGenre.cs" />
+    <Compile Include="Models\AudioPopularSettings.cs" />
+    <Compile Include="Models\AudioSearchSettings.cs" />
     <Compile Include="Models\AuthData.cs" />
+    <Compile Include="Models\IParameters.cs" />
+    <Compile Include="Models\ParametersCollection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VkAPI.cs" />
   </ItemGroup>

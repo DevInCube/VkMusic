@@ -24,6 +24,8 @@ namespace VkNET
         private AuthData authData;
         private IAuthProvider authProvider;
 
+        public AuthData AuthData { get { return authData; } }
+
         public VkAPI(IAuthProvider authProvider)
         {
             this.authProvider = authProvider;
@@ -75,7 +77,7 @@ namespace VkNET
             return data;
         }
 
-        string CreateMethodRequest(string method_name, NameValueCollection parameters)
+        string CreateMethodRequest(string method_name, ParametersCollection parameters)
         {
             string methodUri = "https://api.vk.com/method/";
             parameters["access_token"] = authData.AccessToken;
@@ -97,64 +99,91 @@ namespace VkNET
             return JObject.Parse(response);
         }
 
+        public List<AudioFileInfo> ToList(JToken res)
+        {
+            List<AudioFileInfo> files = new List<AudioFileInfo>();            
+            for (int i = 0; i < res.Count() - 1; i++)
+            {
+                JToken audioToken = res[i + 1];
+                AudioFileInfo af = AudioFileInfo.FromJson(audioToken);
+                files.Add(af);
+            }
+            return files;
+        }
+
         public List<AudioFileInfo> AudioGet()
         {
-            var parameters = System.Web.HttpUtility.ParseQueryString(string.Empty);
-            parameters["owner_id"] = authData.UserId.ToString();
-            parameters["need_user"] = 0.ToString();
-            parameters["offset"] = 0.ToString();
-            parameters["count"] = 10.ToString();
+            var parameters = new ParametersCollection() {
+                {"owner_id", authData.UserId},
+                {"need_user", 0},
+                {"offset", 0},
+                {"count", 10},
+            };
             string request = CreateMethodRequest("audio.get", parameters);
             WebClient client = new WebClient();
             string response = client.DownloadString(request);
             var res = JObject.Parse(response)["response"];
+            long count = res[0].Value<long>(); //
+            return ToList(res);
+        }
 
-            List<AudioFileInfo> files = new List<AudioFileInfo>();
-            long count = res[0].Value<long>();
-            for (int i = 0; i < res.Count() - 1; i++)
-            {
-                JToken audioToken = res[i + 1];
-                AudioFileInfo af = AudioFileInfo.FromJson(audioToken);
-                files.Add(af);
-            }
-            return files;
+        public long AudioGetCount(long owner_id)
+        {
+            var parameters = new ParametersCollection { 
+                {"owner_id", owner_id}
+            };
+            string request = CreateMethodRequest("audio.getCount", parameters);
+            var res = GetJSONResponse(request)["response"];
+            return int.Parse(res.Value<string>());
         }
 
         public AudioFileInfo AudioGetById(long owner_id, long audio_id)
         {
-            var parameters = CreateParameters(new Dictionary<string, object> { 
-                {"audios", "{0}_{1}".Format(owner_id, audio_id)}
-            });
+            var parameters = new ParametersCollection { 
+                {"audios", "{0}_{1}".FormatWith(owner_id, audio_id)}
+            };
             string request = CreateMethodRequest("audio.getById", parameters);
-            var j = GetJSONResponse(request);
-            var res = j["response"];
+            var res = GetJSONResponse(request)["response"];            
             if (res.Count() == 0) return null;
-            return  AudioFileInfo.FromJson(j["response"][0]);
+            return AudioFileInfo.FromJson(res[0]);
         }
 
-        public List<AudioFileInfo> AudioSearch(string q)
+        public string AudioGetLyrics(long lyrics_id)
         {
-            var parameters = CreateParameters(new Dictionary<string, object> { 
+            var parameters = new ParametersCollection() {
+                {"lyrics_id", lyrics_id},
+            };
+            string request = CreateMethodRequest("audio.getLyrics", parameters);
+            var res = GetJSONResponse(request)["response"];
+            return res["text"].Value<string>().AsUTF8();
+        }
+
+        public List<AudioFileInfo> AudioSearch(string q, AudioSearchSettings settings = null)
+        {
+            var parameters = new ParametersCollection() {
                 {"q", q},
-                {"auto_complete", 0},
-                {"performer_only", 0},
                 {"offset", 0},
                 {"count", 10},
-            });
+            };
+            parameters = parameters.MergeWith(settings);
             string request = CreateMethodRequest("audio.search", parameters);
             var res = GetJSONResponse(request)["response"];
 
-            List<AudioFileInfo> files = new List<AudioFileInfo>();
-            long count = res[0].Value<long>();
-            for (int i = 0; i < res.Count() - 1; i++)
-            {
-                JToken audioToken = res[i + 1];
-                AudioFileInfo af = AudioFileInfo.FromJson(audioToken);
-                files.Add(af);
-            }
-            return files;
+            return ToList(res);
         }
 
+        public List<AudioFileInfo> AudioGetPopular(AudioPopularSettings settings = null)
+        {
+            var parameters = new ParametersCollection() {
+                {"offset", 0},
+                {"count", 10},
+            };
+            parameters = parameters.MergeWith(settings);
+            string request = CreateMethodRequest("audio.getPopular", parameters);
+            var res = GetJSONResponse(request)["response"];
+
+            return ToList(res);
+        }
         
     }
 }
