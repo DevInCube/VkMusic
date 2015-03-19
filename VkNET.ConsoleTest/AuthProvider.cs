@@ -59,7 +59,7 @@ namespace VkNET.ConsoleTest
                 data.AccessToken = xel.Element("access_token").Value;
                 data.UserId = long.Parse(xel.Element("user_id").Value);
                 data.ExpiresAt = DateTime.Parse(xel.Element("expires_at").Value);
-                data.ExpiresIn = (data.ExpiresAt - DateTime.Now).Seconds;
+                data.ExpiresIn = (long)(Math.Floor((data.ExpiresAt - DateTime.Now).TotalSeconds));
             }
             catch (IOException)
             {
