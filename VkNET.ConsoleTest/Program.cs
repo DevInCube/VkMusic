@@ -21,7 +21,7 @@ namespace VkNET.ConsoleTest
             vk.DoAuth(() =>
             {
                 Console.WriteLine("Auth OK");
-                Console.WriteLine(vk.AudioAddAlbum("Root/Test"));
+                //Console.WriteLine(vk.AudioAddAlbum("Root/Test"));
                 //Console.WriteLine(vk.AudioGetLyrics(2428970));
                 //Console.WriteLine(vk.AudioSearch("Muse").Count);
                 //Console.WriteLine(vk.AudioGetCount(vk.AuthData.UserId));

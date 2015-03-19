@@ -49,6 +49,7 @@
     <Compile Include="Exceptions\VkException.cs" />
     <Compile Include="Extensions\BoolExtension.cs" />
     <Compile Include="Extensions\StringExtension.cs" />
+    <Compile Include="Models\AudioAlbumInfo.cs" />
     <Compile Include="Models\AudioFileInfo.cs" />
     <Compile Include="Models\AudioGenre.cs" />
     <Compile Include="Models\AudioPopularSettings.cs" />

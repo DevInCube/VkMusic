@@ -24,7 +24,7 @@ namespace My.VKMusic.NET
 
         private void Application_Startup(object sender, StartupEventArgs e)
         {
-            TestWindow playerWindow = new TestWindow();
+            TestWindow playerWindow = new TestWindow(vk);
             playerWindow.Show();
 
             BackgroundWorker loader = new BackgroundWorker();

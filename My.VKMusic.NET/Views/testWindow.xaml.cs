@@ -15,6 +15,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using VkNET;
 using VkNET.Models;
 
 namespace My.VKMusic.Views
@@ -25,6 +26,7 @@ namespace My.VKMusic.Views
     public partial class TestWindow : Window, INotifyPropertyChanged
     {
 
+        private VkAPI vk;
         private AudioPlayer player;
         private AudioFile _SelectedAudio;
 
@@ -39,6 +41,7 @@ namespace My.VKMusic.Views
             set {
                 if (_SelectedAudio != null) SelectedAudio.IsSelected = false;
                 _SelectedAudio = value;
+                vk.AudioSetBroadcast(SelectedAudio.Info.Id);
                 _SelectedAudio.IsSelected = true;
                 InitAudio(_SelectedAudio); 
                 OnPropertyChanged("SelectedAudio"); 
@@ -46,10 +49,11 @@ namespace My.VKMusic.Views
         }
         public ObservableCollection<AudioFile> AudioList { get; set; }
 
-        public TestWindow()
+        public TestWindow(VkAPI vk)
         {
             InitializeComponent();
 
+            this.vk = vk;
             player = new AudioPlayer();
             AudioList = new ObservableCollection<AudioFile>();            
             PlayCommand = new SimpleCommand(() => { player.Play(); });

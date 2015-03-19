@@ -186,6 +186,16 @@ namespace VkNET
             return ToList(res);
         }
 
+        public void AudioSetBroadcast(long audio_id)
+        {
+            var parameters = new ParametersCollection() {
+                {"audio", "{0}_{1}".FormatWith(authData.UserId, audio_id)},                
+            };
+            string request = CreateMethodRequest("audio.setBroadcast", parameters);
+            var res = GetJSONResponse(request)["response"];
+            long settingValue = res[0].Value<long>(); //@todo
+        }
+
         public long AudioAddAlbum(string title)
         {
             var parameters = new ParametersCollection() {
