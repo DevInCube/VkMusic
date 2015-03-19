@@ -79,16 +79,8 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\AuthWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Views\AuthWindow.xaml.cs">
-      <DependentUpon>AuthWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Views\TestWindow.xaml">
@@ -125,6 +117,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\My.VkMusic.Core\My.VkMusic.Core.csproj">
+      <Project>{16607678-f55e-433e-98fb-34af3256314b}</Project>
+      <Name>My.VkMusic.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\VkNET\VkNET.csproj">
       <Project>{6d6baf30-2597-4fdb-9ba1-b6d701260d58}</Project>
       <Name>VkNET</Name>

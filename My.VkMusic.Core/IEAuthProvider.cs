@@ -9,9 +9,9 @@ using System.Xml.Linq;
 using VkNET.Auth;
 using VkNET.Models;
 
-namespace VkNET.ConsoleTest
+namespace My.VkMusic.Core
 {
-    class AuthProvider : IAuthProvider
+    public class IEAuthProvider : IAuthProvider
     {
 
         private IAuthDataStorage authStorage = new XMLAuthStorage("auth.dat");
@@ -48,7 +48,7 @@ namespace VkNET.ConsoleTest
             this.filePath = Path.Combine(dir, filename);
         }
 
-        public Models.AuthData GetAuthData()
+        public VkNET.Models.AuthData GetAuthData()
         {
             AuthData data = null;
             try
@@ -68,7 +68,7 @@ namespace VkNET.ConsoleTest
             return data;
         }
 
-        public void SetAuthData(Models.AuthData data)
+        public void SetAuthData(VkNET.Models.AuthData data)
         {
             try
             {

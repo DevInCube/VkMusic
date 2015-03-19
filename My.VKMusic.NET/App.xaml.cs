@@ -1,4 +1,5 @@
-﻿using My.VKMusic.Models;
+﻿using My.VkMusic.Core;
+using My.VKMusic.Models;
 using My.VKMusic.Views;
 using System;
 using System.Collections.Generic;
@@ -20,8 +21,8 @@ namespace My.VKMusic.NET
     public partial class App : Application
     {
 
-        private VkAPI vk = new VkAPI(new AuthProvider());
-
+        private VkAPI vk = new VkAPI(new IEAuthProvider());
+        
         private void Application_Startup(object sender, StartupEventArgs e)
         {
             TestWindow playerWindow = new TestWindow(vk);
@@ -44,18 +45,6 @@ namespace My.VKMusic.NET
                 loader.RunWorkerAsync(vk);                
             });
             
-        }
-
-        class AuthProvider : IAuthProvider
-        {
-
-            public void DoAuth(string request, Action<VkNET.Models.AuthData> callback)
-            {
-                AuthWindow wnd = new AuthWindow();
-                wnd.GotAccessToken += callback;
-                wnd.Open(request);
-                wnd.Show();
-            }
         }
     }
 }
