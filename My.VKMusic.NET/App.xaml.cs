@@ -2,6 +2,7 @@
 using My.VKMusic.Views;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Configuration;
 using System.Data;
 using System.Linq;
@@ -21,11 +22,25 @@ namespace My.VKMusic.NET
             playerWindow.Show();
 
             VkAPI vk = new VkAPI();
-            vk.DoAuth(() => {
-                var audios = vk.AudioGet();
+
+            BackgroundWorker loader = new BackgroundWorker();
+            loader.DoWork += (sender2, e2) =>
+            {
+                var vk2 = e2.Argument as VkAPI;
+                var audios = vk2.AudioGet();
+                e2.Result = audios;
+            };
+            loader.RunWorkerCompleted += (s2, e2) =>
+            {
+                var audios = e2.Result as List<AudioFileInfo>;
                 playerWindow.InitAudioList(audios);
+            };
+
+            vk.DoAuth(() => {
+                loader.RunWorkerAsync(vk);                
             });
             
         }
+
     }
 }

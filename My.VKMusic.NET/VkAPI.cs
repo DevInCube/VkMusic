@@ -1,5 +1,6 @@
 ﻿using My.VKMusic.Models;
 using My.VKMusic.NET;
+using My.VKMusic.Views;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -42,7 +43,7 @@ namespace My.VKMusic
             qs["response_type"] = "token";
             string request_url = "https://oauth.vk.com/authorize?" + qs.ToString();
 
-            MainWindow wnd = new MainWindow();
+            AuthWindow wnd = new AuthWindow();
             wnd.GotAccessToken += (AuthData data) =>
             {
                 this.authData = data;

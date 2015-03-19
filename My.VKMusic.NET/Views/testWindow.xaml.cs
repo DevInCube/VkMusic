@@ -33,7 +33,7 @@ namespace My.VKMusic.Views
         public ICommand NextCommand { get; set; }
         public ICommand PlayAudioCommand { get; set; }
 
-        public AudioFile SelectedAudio { 
+        public AudioFile SelectedAudio {
             get { return _SelectedAudio; }
             set {
                 if (_SelectedAudio != null) SelectedAudio.IsSelected = false;

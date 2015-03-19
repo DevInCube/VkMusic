@@ -18,18 +18,18 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace My.VKMusic.NET
+namespace My.VKMusic.Views
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class AuthWindow : Window
     {
 
         private bool isSilent = false;
         public event Action<AuthData> GotAccessToken;
 
-        public MainWindow()
+        public AuthWindow()
         {
             InitializeComponent();
             
@@ -39,7 +39,9 @@ namespace My.VKMusic.NET
         void browser_Navigated(object sender, NavigationEventArgs e)
         {
             if (!isSilent)
+            {
                 SetSilent(browser, true);
+            }
             NameValueCollection qscoll = HttpUtility.ParseQueryString(e.Uri.Fragment);
             string stoken = qscoll["#access_token"];
             if (!String.IsNullOrWhiteSpace(stoken))
