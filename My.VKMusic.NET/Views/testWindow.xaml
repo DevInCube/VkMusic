@@ -1,7 +1,7 @@
 ﻿<Window x:Class="My.VKMusic.Views.TestWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:v="clr-namespace:My.VKMusic.Views"
+        xmlns:v="clr-namespace:My.VKMusic.Views" 
         Title="VKMusic" Height="400" Width="600" x:Name="this">
     <Window.Resources>
         <Style x:Key="PlayerBtn" TargetType="Button">
@@ -19,13 +19,15 @@
                 <Button Content="(ll) Pause" Command="{Binding PauseCommand}" Style="{StaticResource PlayerBtn}"/>
                 <Button Content="(&gt;&gt;) Next" Command="{Binding NextCommand}" Style="{StaticResource PlayerBtn}"/>
             </StackPanel>
-            <ItemsControl ItemsSource="{Binding AudioList}">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <v:AudioItem />
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <ItemsControl ItemsSource="{Binding AudioList}" >
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <v:AudioItem AllowDrop="True" />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
         </StackPanel>
     </Grid>
 </Window>

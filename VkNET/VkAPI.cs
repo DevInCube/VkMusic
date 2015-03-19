@@ -257,7 +257,9 @@ namespace VkNET
                 {
                     case (1): ex = new UnknownVkException(error_msg); break;
                     case (15): ex = new AccessDeniedVkException(error_msg); break;
+                    case (200): ex = new AccessToAlbumDeniedVkException(error_msg); break;
                     case (201): ex = new AccessToAudioDeniedVkException(error_msg); break;
+                    case (300): ex = new AlbumFullVkException(error_msg); break;
                 }
                 var request_params = error["request_params"] as JArray;
                 foreach (var item in request_params)

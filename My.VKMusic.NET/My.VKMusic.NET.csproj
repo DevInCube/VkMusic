@@ -72,6 +72,9 @@
     <Compile Include="Views\AudioItem.xaml.cs">
       <DependentUpon>AudioItem.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\TestDDWindow.xaml.cs">
+      <DependentUpon>TestDDWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\TestWindow.xaml.cs">
       <DependentUpon>TestWindow.xaml</DependentUpon>
     </Compile>
@@ -83,6 +86,10 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Views\TestDDWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\TestWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

@@ -46,6 +46,8 @@
     <Compile Include="Auth\IAuthDataStorage.cs" />
     <Compile Include="Auth\IAuthProvider.cs" />
     <Compile Include="Exceptions\AccessDeniedVkException.cs" />
+    <Compile Include="Exceptions\AlbumFullVkException.cs" />
+    <Compile Include="Exceptions\AccessToAlbumDeniedVkException.cs" />
     <Compile Include="Exceptions\AccessToAudioDeniedVkException.cs" />
     <Compile Include="Exceptions\UnknownVkException.cs" />
     <Compile Include="Exceptions\VkException.cs" />
