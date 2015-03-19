@@ -1,13 +1,12 @@
-﻿using NAudio.Wave;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using My.VKMusic.Extensions;
+using VkNET.Extensions;
 
-namespace My.VKMusic.Models
+namespace VkNET.Models
 {
     public class AudioFileInfo
     {

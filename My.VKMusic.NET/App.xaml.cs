@@ -8,6 +8,9 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using VkNET;
+using VkNET.Auth;
+using VkNET.Models;
 
 namespace My.VKMusic.NET
 {
@@ -16,12 +19,13 @@ namespace My.VKMusic.NET
     /// </summary>
     public partial class App : Application
     {
+
+        private VkAPI vk = new VkAPI(new AuthProvider());
+
         private void Application_Startup(object sender, StartupEventArgs e)
         {
             TestWindow playerWindow = new TestWindow();
             playerWindow.Show();
-
-            VkAPI vk = new VkAPI();
 
             BackgroundWorker loader = new BackgroundWorker();
             loader.DoWork += (sender2, e2) =>
@@ -42,5 +46,16 @@ namespace My.VKMusic.NET
             
         }
 
+        class AuthProvider : IAuthProvider
+        {
+
+            public void DoAuth(string request, Action<VkNET.Models.AuthData> callback)
+            {
+                AuthWindow wnd = new AuthWindow();
+                wnd.GotAccessToken += callback;
+                wnd.Open(request);
+                wnd.Show();
+            }
+        }
     }
 }

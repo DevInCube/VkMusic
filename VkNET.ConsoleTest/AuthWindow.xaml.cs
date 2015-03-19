@@ -1,5 +1,4 @@
-﻿using My.VKMusic.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
@@ -43,19 +42,19 @@ namespace My.VKMusic.Views
             {
                 SetSilent(browser, true);
             }
-            NameValueCollection qscoll = HttpUtility.ParseQueryString(e.Uri.Fragment);
-            string stoken = qscoll["#access_token"];
-            if (!String.IsNullOrWhiteSpace(stoken))
+            try
             {
-                AuthData data = new AuthData()
-                {
-                    AccessToken = qscoll["#access_token"],
-                    ExpiresIn = long.Parse(qscoll["expires_in"]),
-                    UserId = long.Parse(qscoll["user_id"]),
-                };
+                var data = VkNET.VkAPI.GetAuthData(e.Uri.Fragment);
                 this.Close();
                 if (GotAccessToken != null)
                     GotAccessToken.Invoke(data);
+            }
+            catch (VkNET.Exceptions.AccessDeniedVkException ex)
+            {
+                //@todo
+                MessageBox.Show(ex.Message);
+                if (GotAccessToken != null)
+                    GotAccessToken.Invoke(null);
             }
         }
 

@@ -64,10 +64,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Models\AudioPlayer.cs" />
-    <Compile Include="Models\AudioFileInfo.cs" />
-    <Compile Include="Models\AuthData.cs" />
     <Compile Include="ViewModels\AudioFile.cs" />
     <Compile Include="ViewModels\ObservableObject.cs" />
     <Compile Include="ViewModels\RelayCommand.cs" />
@@ -78,7 +75,6 @@
     <Compile Include="Views\TestWindow.xaml.cs">
       <DependentUpon>TestWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="VkAPI.cs" />
     <Page Include="Views\AudioItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -127,6 +123,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\VkNET\VkNET.csproj">
+      <Project>{6d6baf30-2597-4fdb-9ba1-b6d701260d58}</Project>
+      <Name>VkNET</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

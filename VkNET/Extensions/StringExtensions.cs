@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace My.VKMusic.Extensions
+namespace VkNET.Extensions
 {
     public static class StringExtensions
     {
