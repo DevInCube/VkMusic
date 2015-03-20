@@ -1,5 +1,6 @@
 ﻿using My.VKMusic.Tools;
 using My.VKMusic.ViewModels;
+using My.VKMusic.Views.DragManagement;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -81,7 +82,7 @@ namespace My.VKMusic.Views
                 item.List.Remove(item);
 
                 var clone = item.Clone() as ADragVM;
-                clone.IsDragged = true;
+                clone.IsDropPreview = true;
                 item.List.Insert(index, clone);
                 CreateDragDropWindow(dragControl.Parent as Visual);                
                 var ret = DragDrop.DoDragDrop(dragControl, dragControl.DataContext, DragDropEffects.Move);
@@ -93,18 +94,20 @@ namespace My.VKMusic.Views
         {
             if (_dragdropWindow != null)
             {
-                ADragVM dropData = _dragdropWindow.DataContext as ADragVM;
 
-                ADragVM fakeItem = dropData.List.FirstOrDefault(x => x.IsDragged == true);
+                var dragContext = this._dragdropWindow.DataContext as DragContext;
+                var dragItem = dragContext.Item;
+
+                ADragVM fakeItem = dragItem.List.FirstOrDefault(x => x.IsDropPreview == true);
 
                 if (fakeItem != null)
                 {
                     if (!success)
                     {
-                        int index = dropData.List.IndexOf(fakeItem);
-                        dropData.List.Insert(index, dropData);
+                        int index = dragItem.List.IndexOf(fakeItem);
+                        dragItem.List.Insert(index, dragItem);
                     }
-                    dropData.List.Remove(fakeItem);
+                    dragItem.List.Remove(fakeItem);
                 }
 
                 _dragdropWindow.Close();
@@ -114,30 +117,43 @@ namespace My.VKMusic.Views
 
         private void ItemsControl_Drop(object sender, DragEventArgs e)
         {
-            var droppedData = this._dragdropWindow.DataContext as ADragVM;
+            var dragContext = this._dragdropWindow.DataContext as DragContext;
+            var dragItem = dragContext.Item;
 
             if (sender is ItemsControl)
             {
+                if (dragContext.DragAction == DragActionType.Reorder &&
+                    (sender as ItemsControl).DataContext != dragItem.List) return;
+
                 var target = (sender as ItemsControl).DataContext as ObservableCollection<ADragVM>;
-                if (!target.Contains(droppedData))
-                    target.Add(droppedData);
+                if (!target.Contains(dragItem))
+                    target.Add(dragItem);
                 else
                 {
-                    target.Remove(droppedData);
-                    target.Add(droppedData);
-                }          
+                    target.Remove(dragItem);
+                    target.Add(dragItem);
+                }
             }
             if (sender is DockPanel)
             {
                 var targetElem = sender as DockPanel;
                 var targetItem = targetElem.DataContext as ADragVM;
+
+                if (dragContext.DragAction == DragActionType.Reorder &&
+                    targetItem.List != dragItem.List) return;
+
                 var list = targetItem.List;
                 int index = list.IndexOf(targetItem);
-                list.Remove(droppedData);
-                list.Insert(index, droppedData);
+                list.Remove(dragItem);
+                list.Insert(index, dragItem);
                 e.Handled = true;
             }
+            
             CloseDragWindow(true);
+
+            ADragVM fakeItem = (dragContext.SourceList as ObservableCollection<ADragVM>).FirstOrDefault(x => x.IsDropPreview == true);
+            if (fakeItem != null)
+                fakeItem.IsDropPreview = false;
         }
 
         private void Label_GiveFeedback(object sender, GiveFeedbackEventArgs e)
@@ -174,83 +190,139 @@ namespace My.VKMusic.Views
             this._dragdropWindow.Left = w32Mouse.X;
             this._dragdropWindow.Top = w32Mouse.Y;
             this._dragdropWindow.Show();
-            this._dragdropWindow.DataContext = (dragElement as DockPanel).DataContext;
+
+            var dragItem = (dragElement as DockPanel).DataContext as ADragVM;
+            this._dragdropWindow.DataContext = new DragContext(dragItem, dragItem.List, DragActionType.Copy);
         }
 
         private void DockPanel_DragOver(object sender, DragEventArgs e)
+        {
+           // e.Handled = true;
+        }
+
+        private void ItemsControl_DragOver(object sender, DragEventArgs e)
+        {
+            /*ItemsControl dragControl = sender as ItemsControl;
+            ObservableCollection<ADragVM> list = dragControl.DataContext as ObservableCollection<ADragVM>;
+
+            var dragContext = this._dragdropWindow.DataContext as DragContext;
+            if ((dragContext.DragAction == DragActionType.Reorder
+                && dragContext.Item.List == list)
+                || (dragContext.Item.List != list))
+            {              
+                ADragVM fakeItem = list.FirstOrDefault(x => x.IsDropPreview == true);
+                if (fakeItem != null)
+                {
+                    list.Remove(fakeItem);
+                    list.Add(fakeItem);
+                }
+            }*/
+        }
+
+
+        private void DockPanel_DragEnter(object sender, DragEventArgs e)
         {
             if (sender is DockPanel)
             {
                 DockPanel dragControl = sender as DockPanel;
                 ADragVM item = dragControl.DataContext as ADragVM;
-                ADragVM fakeItem = item.List.FirstOrDefault(x => x.IsDragged == true);
-                if (fakeItem != null)
+                var thisList = item.List;
+
+                if (!item.IsDropPreview)
                 {
-                    int index = item.List.IndexOf(item);
-                    item.List.Remove(fakeItem);
-                    item.List.Insert(index, fakeItem);
+                    var dragContext = this._dragdropWindow.DataContext as DragContext;
+                    if (((dragContext.DragAction == DragActionType.Reorder)
+                        && (dragContext.SourceList == thisList))
+                        || ((dragContext.DragAction != DragActionType.Reorder) 
+                        && (dragContext.SourceList != thisList)))
+                    {
+                        if(dragContext.DragAction == DragActionType.Copy 
+                            && thisList.Contains(dragContext.Item)) return;
+
+                        ADragVM fakeItem = item.List.FirstOrDefault(x => x.IsDropPreview == true);
+                        if (fakeItem == null)
+                        {
+                            fakeItem = dragContext.Item.Clone() as ADragVM;
+                            fakeItem.IsDropPreview = true;
+                            thisList.Add(fakeItem);
+                        }
+
+                        int oldIndex = thisList.IndexOf(fakeItem);
+                        int newIndex = thisList.IndexOf(item);
+
+                        thisList.Move(oldIndex, newIndex);
+
+                        blockedList = thisList;
+                    }
                 }
                 e.Handled = true;
             }
         }
 
-        private void ItemsControl_DragOver(object sender, DragEventArgs e)
-        {
-            ItemsControl dragControl = sender as ItemsControl;
-            ObservableCollection<ADragVM> list = dragControl.DataContext as ObservableCollection<ADragVM>;
-            ADragVM fakeItem = list.FirstOrDefault(x => x.IsDragged == true);
-            if (fakeItem != null)
-            {
-                int index = list.Count - 1;
-                list.Remove(fakeItem);
-                list.Insert(index, fakeItem);
-            }
-        }
-
         private void ItemsControl_DragEnter(object sender, DragEventArgs e)
         {
-            var dragItem = this._dragdropWindow.DataContext as ADragVM;
+            var dragContext = this._dragdropWindow.DataContext as DragContext;
+            var dragItem = dragContext.Item;
 
             ItemsControl dragControl = sender as ItemsControl;
+            dragControl.BorderThickness = new Thickness(2);
+            dragControl.BorderBrush = Brushes.Red;
             ObservableCollection<ADragVM> list = dragControl.DataContext as ObservableCollection<ADragVM>;
 
-            if (dragItem.List != list)
+            if (dragContext.DragAction == DragActionType.Copy
+                           && list.Contains(dragContext.Item)) return;
+
+            if (dragContext.DragAction == DragActionType.Move)
             {
-                dragItem.List.Remove(dragItem.List.FirstOrDefault(x => x.IsDragged == true));
-                dragItem.List = list;
+                if (dragItem.List != list)
+                {
+                    dragItem.List.Remove(dragItem.List.FirstOrDefault(x => x.IsDropPreview == true));
+                    dragItem.List = list;
+                }
             }
 
-            ADragVM fakeItem = list.FirstOrDefault(x => x.IsDragged == true);
-            if (fakeItem == null)
+            if (dragContext.DragAction == DragActionType.Move
+                || dragContext.DragAction == DragActionType.Copy)
             {
-                var clone = dragItem.Clone() as ADragVM;
-                clone.IsDragged = true;
-                list.Add(clone);
+                ADragVM fakeItem = list.FirstOrDefault(x => x.IsDropPreview == true);
+                if (fakeItem == null)
+                {
+                    var clone = dragItem.Clone() as ADragVM;
+                    clone.IsDropPreview = true;
+                    list.Add(clone);
+                }
             }
         }
 
+        ObservableCollection<ADragVM> blockedList = null;
+
         private void ItemsControl_DragLeave(object sender, DragEventArgs e)
-        {            
-           
+        {
+            if (_dragdropWindow != null)
+            {
+                 ItemsControl control = sender as  ItemsControl;
+                 ObservableCollection<ADragVM> list = control.DataContext as ObservableCollection<ADragVM>;
+
+                 if (blockedList == list)
+                 {
+                     blockedList = null;
+                     return;
+                 }
+
+                 control.BorderThickness = new Thickness(0);
+                 
+                 var dragContext = this._dragdropWindow.DataContext as DragContext;
+                 var dragItem = dragContext.Item;
+
+                 if (dragContext.SourceList != list)
+                 {
+                     list.Remove(list.FirstOrDefault(x => x.IsDropPreview == true));
+                 }
+            }
         }
 
        
-    }
 
-    public abstract class ADragVM : ObservableObject, ICloneable
-    {
-
-        private bool _IsDragged;
-
-        public  ObservableCollection<ADragVM> List { get; set; }
-
-        public bool IsDragged
-        {
-            get { return _IsDragged; }
-            set { _IsDragged = value; OnPropertyChanged("IsDragged"); }
-        }
-
-        public abstract object Clone();
     }
 
     public class DragTestItem : ADragVM
@@ -268,6 +340,11 @@ namespace My.VKMusic.Views
         public override object Clone()
         {
             return new DragTestItem(i);
+        }
+
+        public override bool Equals(ADragVM other)
+        {
+            return this.i == (other as DragTestItem).i;
         }
     }
 }

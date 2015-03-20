@@ -76,8 +76,11 @@
     <Compile Include="Views\AudioListControl.xaml.cs">
       <DependentUpon>AudioListControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\DragManagement\DragContext.cs" />
     <Compile Include="Views\Converters\DragConverter.cs" />
     <Compile Include="Views\Converters\VisibilityConverter.cs" />
+    <Compile Include="Views\DragManagement\ADragVM.cs" />
+    <Compile Include="Views\DragManagement\DragActionType.cs" />
     <Compile Include="Views\TestDDWindow.xaml.cs">
       <DependentUpon>TestDDWindow.xaml</DependentUpon>
     </Compile>
