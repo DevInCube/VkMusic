@@ -1,4 +1,6 @@
-﻿using System;
+﻿using My.VKMusic.Tools;
+using My.VKMusic.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -22,6 +24,7 @@ namespace My.VKMusic.Views
     /// </summary>
     public partial class TestDDWindow : Window, INotifyPropertyChanged
     {
+
         private Window _dragdropWindow;
         public ObservableCollection<TestItem> Items1 { get; set; }
         public ObservableCollection<TestItem> Items2 { get; set; }
@@ -30,18 +33,28 @@ namespace My.VKMusic.Views
         {
             InitializeComponent();            
 
-            this.Items1 = new ObservableCollection<TestItem>()
-            {
-                new TestItem(1),
-                new TestItem(2),
-                new TestItem(3),
-            };
-            this.Items2 = new ObservableCollection<TestItem>()  {
-                new TestItem(4),                
-                new TestItem(5),
-            };
+            this.Items1 = new ObservableCollection<TestItem>();
+            this.Items1.CollectionChanged += Items1_CollectionChanged;
+            this.Items1 .Add( new TestItem(1));
+            this.Items1 .Add( new TestItem(2));
+            this.Items1 .Add( new TestItem(3));
+            this.Items1 .Add( new TestItem(10));
+          
+            this.Items2 = new ObservableCollection<TestItem>();
+            this.Items2.CollectionChanged += Items1_CollectionChanged;
+            this.Items2.Add(new TestItem(25));
+            this.Items2.Add(new TestItem(255));
+
 
             this.DataContext = this;
+        }
+
+        void Items1_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add)
+            {
+                (e.NewItems[0] as TestItem).List = sender as ObservableCollection<TestItem>;
+            }
         }
 
         #region propchanged
@@ -61,36 +74,35 @@ namespace My.VKMusic.Views
         {
             if (sender is Label)
             {
-                Label dragControl = sender as Label;
-                CreateDragDropWindow(dragControl.Parent as Visual);
+                Label dragControl = sender as Label;    
+  
+                TestItem item = (dragControl.DataContext as TestItem);
+                int index = item.List.IndexOf(item);
+                item.List.Remove(item);
+
+                var clone = item.Clone() as TestItem;
+                clone.IsDragged = true;
+                item.List.Insert(index, clone);
+                CreateDragDropWindow(dragControl.Parent as Visual);                
                 var ret = DragDrop.DoDragDrop(dragControl, dragControl.DataContext, DragDropEffects.Move);
                 if (ret == DragDropEffects.None)
                 {
-                    if (_dragdropWindow != null)
-                    {
-                        _dragdropWindow.Close();
-                        _dragdropWindow = null;
-                    }
+                    CloseDragWindow(item);
                 }
             }
         }
 
-
-        [DllImport("user32.dll")]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        internal static extern bool GetCursorPos(ref Win32Point pt);
-
-        [StructLayout(LayoutKind.Sequential)]
-        internal struct Win32Point
+        void CloseDragWindow(TestItem dropData)
         {
-            public Int32 X;
-            public Int32 Y;
-        };
-        public static Point GetMousePosition()
-        {
-            Win32Point w32Mouse = new Win32Point();
-            GetCursorPos(ref w32Mouse);
-            return new Point(w32Mouse.X, w32Mouse.Y);
+            TestItem fakeItem = dropData.List.FirstOrDefault(x => x.IsDragged == true);
+            if (fakeItem!=null)
+                dropData.List.Remove(fakeItem);
+
+            if (_dragdropWindow != null)
+            {
+                _dragdropWindow.Close();
+                _dragdropWindow = null;
+            }
         }
 
         private void ItemsControl_Drop(object sender, DragEventArgs e)
@@ -101,26 +113,30 @@ namespace My.VKMusic.Views
             {
                 var target = (sender as ItemsControl).DataContext as ObservableCollection<TestItem>;
                 if (!target.Contains(droppedData))
-                    target.Add(droppedData);                
-                if (_dragdropWindow != null)
+                    target.Add(droppedData);
+                else
                 {
-                    _dragdropWindow.Close();
-                    _dragdropWindow = null;
-                }
+                    target.Remove(droppedData);
+                    target.Add(droppedData);
+                }                
             }
             if (sender is DockPanel)
             {
                 var targetElem = sender as DockPanel;
-                int index = Items1.IndexOf(targetElem.DataContext as TestItem);
-                Items1.Remove(droppedData);
-                Items1.Insert(index, droppedData);
+                var targetItem = targetElem.DataContext as TestItem;
+                var list = targetItem.List;
+                int index = list.IndexOf(targetItem);
+                list.Remove(droppedData);
+                list.Insert(index, droppedData);
+                e.Handled = true;
             }
+            CloseDragWindow(droppedData);
         }
 
         private void Label_GiveFeedback(object sender, GiveFeedbackEventArgs e)
         {
             Win32Point w32Mouse = new Win32Point();
-            GetCursorPos(ref w32Mouse);
+            CursorHelper.GetCursorPos(ref w32Mouse);
 
             this._dragdropWindow.Left = w32Mouse.X + 10;
             this._dragdropWindow.Top = w32Mouse.Y + 10;
@@ -134,7 +150,7 @@ namespace My.VKMusic.Views
             _dragdropWindow.AllowDrop = false;
             _dragdropWindow.Background = null;
             _dragdropWindow.IsHitTestVisible = false;
-            _dragdropWindow.Opacity = 0.75;
+            _dragdropWindow.Opacity = 0.8;
             _dragdropWindow.SizeToContent = SizeToContent.WidthAndHeight;
             _dragdropWindow.Topmost = true;
             _dragdropWindow.ShowInTaskbar = false;
@@ -146,19 +162,84 @@ namespace My.VKMusic.Views
             this._dragdropWindow.Content = r;
 
             Win32Point w32Mouse = new Win32Point();
-            GetCursorPos(ref w32Mouse);
+            CursorHelper.GetCursorPos(ref w32Mouse);
 
             this._dragdropWindow.Left = w32Mouse.X;
             this._dragdropWindow.Top = w32Mouse.Y;
             this._dragdropWindow.Show();
-    
+            this._dragdropWindow.DataContext = (dragElement as DockPanel).DataContext;
+        }
+
+        private void DockPanel_DragOver(object sender, DragEventArgs e)
+        {
+            if (sender is DockPanel)
+            {
+                DockPanel dragControl = sender as DockPanel;
+                TestItem item = dragControl.DataContext as TestItem;
+                TestItem fakeItem = item.List.FirstOrDefault(x => x.IsDragged == true);
+                if (fakeItem != null)
+                {
+                    int index = item.List.IndexOf(item);
+                    item.List.Remove(fakeItem);
+                    item.List.Insert(index, fakeItem);
+                }
+                e.Handled = true;
+            }
+        }
+
+        private void ItemsControl_DragOver(object sender, DragEventArgs e)
+        {
+            ItemsControl dragControl = sender as ItemsControl;
+            ObservableCollection<TestItem> list = dragControl.DataContext as ObservableCollection<TestItem>;
+            TestItem fakeItem = list.FirstOrDefault(x => x.IsDragged == true);
+            if (fakeItem != null)
+            {
+                int index = list.Count - 1;
+                list.Remove(fakeItem);
+                list.Insert(index, fakeItem);
+            }
+        }
+
+        private void ItemsControl_DragEnter(object sender, DragEventArgs e)
+        {
+            var dragItem = this._dragdropWindow.DataContext as TestItem;
+
+            ItemsControl dragControl = sender as ItemsControl;
+            ObservableCollection<TestItem> list = dragControl.DataContext as ObservableCollection<TestItem>;
+
+            if (dragItem.List != list)
+            {
+                dragItem.List.Remove(dragItem.List.FirstOrDefault(x => x.IsDragged == true));
+                dragItem.List = list;
+            }
+
+            TestItem fakeItem = list.FirstOrDefault(x => x.IsDragged == true);
+            if (fakeItem == null)
+            {
+                var clone = dragItem.Clone() as TestItem;
+                clone.IsDragged = true;
+                list.Add(clone);
+            }
+        }
+
+        private void ItemsControl_DragLeave(object sender, DragEventArgs e)
+        {            
+           
         }
 
        
     }
 
-    public class TestItem
+    public class TestItem : ObservableObject, ICloneable
     {
+
+        private bool _IsDragged;
+
+        public  ObservableCollection<TestItem> List { get; set; }
+        public bool IsDragged { 
+            get { return _IsDragged; }
+            set { _IsDragged = value; OnPropertyChanged("IsDragged"); }
+        }
         private int i;
         public TestItem(int i)
         {
@@ -167,6 +248,11 @@ namespace My.VKMusic.Views
         public override string ToString()
         {
             return i.ToString();
+        }
+
+        public object Clone()
+        {
+            return new TestItem(i);
         }
     }
 }
