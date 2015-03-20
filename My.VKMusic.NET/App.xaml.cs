@@ -25,7 +25,7 @@ namespace My.VKMusic.NET
         
         private void Application_Startup(object sender, StartupEventArgs e)
         {
-            Window test = new TestDDWindow();
+            TestDDWindow test = new TestDDWindow();
             test.Show();
             return;
 

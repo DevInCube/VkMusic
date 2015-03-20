@@ -81,7 +81,6 @@
     <Compile Include="Views\Converters\VisibilityConverter.cs" />
     <Compile Include="Views\DragManagement\ADragVM.cs" />
     <Compile Include="Views\DragManagement\DragActionType.cs" />
-    <Compile Include="Views\DragManagement\DragManager.cs" />
     <Compile Include="Views\TestDDWindow.xaml.cs">
       <DependentUpon>TestDDWindow.xaml</DependentUpon>
     </Compile>
