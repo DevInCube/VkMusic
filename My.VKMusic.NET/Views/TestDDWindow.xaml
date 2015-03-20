@@ -2,6 +2,8 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:conv="clr-namespace:My.VKMusic.Views.Converters" 
+        xmlns:v="clr-namespace:My.VKMusic.Views" 
+        x:Name="this"
         Title="TestDDWindow" Height="300" Width="300">
     <Window.Resources>
         <conv:VisibilityConverter x:Key="Vis"/>
@@ -12,26 +14,7 @@
             <ColumnDefinition Width="121*"/>
             <ColumnDefinition Width="121*"/>
         </Grid.ColumnDefinitions>
-        <ItemsControl Background="LightCyan" DataContext="{Binding Items1}" ItemsSource="{Binding}" AllowDrop="True" Drop="ItemsControl_Drop" DragOver="ItemsControl_DragOver" DragEnter="ItemsControl_DragEnter"  DragLeave="ItemsControl_DragLeave" >
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <DockPanel DataContext="{Binding}"  Background="LightGreen" AllowDrop="True" Drop="ItemsControl_Drop" Opacity="{Binding IsDropPreview, Converter={StaticResource DragConv}}" DragOver="DockPanel_DragOver" DragEnter="DockPanel_DragEnter">
-                        <Label Margin="3" DockPanel.Dock="Right" Cursor="Hand" Background="WhiteSmoke" Content="..." AllowDrop="True" PreviewMouseLeftButtonDown="Button_PreviewMouseLeftButtonDown" GiveFeedback="Label_GiveFeedback" Width="23" HorizontalContentAlignment="Center"/>
-                        <Label  Content="{Binding}" />
-                    </DockPanel>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
-        <ItemsControl Background="LightGoldenrodYellow" DataContext="{Binding Items2}" ItemsSource="{Binding}" Grid.Column="1" Drop="ItemsControl_Drop" AllowDrop="True" DragOver="ItemsControl_DragOver" DragEnter="ItemsControl_DragEnter" DragLeave="ItemsControl_DragLeave" >
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <DockPanel DataContext="{Binding}"  Background="LightSkyBlue" AllowDrop="True" Drop="ItemsControl_Drop" Opacity="{Binding IsDropPreview, Converter={StaticResource DragConv}}" DragOver="DockPanel_DragOver" DragEnter="DockPanel_DragEnter">
-                        <Label Margin="3" DockPanel.Dock="Right" Cursor="Hand" Background="WhiteSmoke" Content="..." PreviewMouseLeftButtonDown="Button_PreviewMouseLeftButtonDown" GiveFeedback="Label_GiveFeedback" Width="23" HorizontalContentAlignment="Center"/>
-                        <Label  Content="{Binding}" />
-                    </DockPanel>
-                </DataTemplate>
-                    
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
+        <v:AudioListControl DragManager="{Binding DataContext.DragManager, ElementName=this}"  DataContext="{Binding Items1}"/>
+        <v:AudioListControl DragManager="{Binding DataContext.DragManager, ElementName=this}"  DataContext="{Binding Items2}" Grid.Column="1"/>        
     </Grid>
 </Window>
