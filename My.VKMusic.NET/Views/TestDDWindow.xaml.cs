@@ -26,24 +26,24 @@ namespace My.VKMusic.Views
     {
 
         private Window _dragdropWindow;
-        public ObservableCollection<TestItem> Items1 { get; set; }
-        public ObservableCollection<TestItem> Items2 { get; set; }
+        public ObservableCollection<ADragVM> Items1 { get; set; }
+        public ObservableCollection<ADragVM> Items2 { get; set; }
 
         public TestDDWindow()
         {
             InitializeComponent();            
 
-            this.Items1 = new ObservableCollection<TestItem>();
+            this.Items1 = new ObservableCollection<ADragVM>();
             this.Items1.CollectionChanged += Items1_CollectionChanged;
-            this.Items1 .Add( new TestItem(1));
-            this.Items1 .Add( new TestItem(2));
-            this.Items1 .Add( new TestItem(3));
-            this.Items1 .Add( new TestItem(10));
+            this.Items1.Add(new DragTestItem(1));
+            this.Items1.Add(new DragTestItem(2));
+            this.Items1.Add(new DragTestItem(3));
+            this.Items1.Add(new DragTestItem(10));
           
-            this.Items2 = new ObservableCollection<TestItem>();
+            this.Items2 = new ObservableCollection<ADragVM>();
             this.Items2.CollectionChanged += Items1_CollectionChanged;
-            this.Items2.Add(new TestItem(25));
-            this.Items2.Add(new TestItem(255));
+            this.Items2.Add(new DragTestItem(25));
+            this.Items2.Add(new DragTestItem(255));
 
 
             this.DataContext = this;
@@ -53,7 +53,7 @@ namespace My.VKMusic.Views
         {
             if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add)
             {
-                (e.NewItems[0] as TestItem).List = sender as ObservableCollection<TestItem>;
+                (e.NewItems[0] as ADragVM).List = sender as ObservableCollection<ADragVM>;
             }
         }
 
@@ -76,11 +76,11 @@ namespace My.VKMusic.Views
             {
                 Label dragControl = sender as Label;    
   
-                TestItem item = (dragControl.DataContext as TestItem);
+                ADragVM item = (dragControl.DataContext as ADragVM);
                 int index = item.List.IndexOf(item);
                 item.List.Remove(item);
 
-                var clone = item.Clone() as TestItem;
+                var clone = item.Clone() as ADragVM;
                 clone.IsDragged = true;
                 item.List.Insert(index, clone);
                 CreateDragDropWindow(dragControl.Parent as Visual);                
@@ -93,9 +93,9 @@ namespace My.VKMusic.Views
         {
             if (_dragdropWindow != null)
             {
-                TestItem dropData = _dragdropWindow.DataContext as TestItem;
+                ADragVM dropData = _dragdropWindow.DataContext as ADragVM;
 
-                TestItem fakeItem = dropData.List.FirstOrDefault(x => x.IsDragged == true);
+                ADragVM fakeItem = dropData.List.FirstOrDefault(x => x.IsDragged == true);
 
                 if (fakeItem != null)
                 {
@@ -114,23 +114,23 @@ namespace My.VKMusic.Views
 
         private void ItemsControl_Drop(object sender, DragEventArgs e)
         {
-            var droppedData = e.Data.GetData(typeof(TestItem)) as TestItem;
+            var droppedData = this._dragdropWindow.DataContext as ADragVM;
 
             if (sender is ItemsControl)
             {
-                var target = (sender as ItemsControl).DataContext as ObservableCollection<TestItem>;
+                var target = (sender as ItemsControl).DataContext as ObservableCollection<ADragVM>;
                 if (!target.Contains(droppedData))
                     target.Add(droppedData);
                 else
                 {
                     target.Remove(droppedData);
                     target.Add(droppedData);
-                }                
+                }          
             }
             if (sender is DockPanel)
             {
                 var targetElem = sender as DockPanel;
-                var targetItem = targetElem.DataContext as TestItem;
+                var targetItem = targetElem.DataContext as ADragVM;
                 var list = targetItem.List;
                 int index = list.IndexOf(targetItem);
                 list.Remove(droppedData);
@@ -182,8 +182,8 @@ namespace My.VKMusic.Views
             if (sender is DockPanel)
             {
                 DockPanel dragControl = sender as DockPanel;
-                TestItem item = dragControl.DataContext as TestItem;
-                TestItem fakeItem = item.List.FirstOrDefault(x => x.IsDragged == true);
+                ADragVM item = dragControl.DataContext as ADragVM;
+                ADragVM fakeItem = item.List.FirstOrDefault(x => x.IsDragged == true);
                 if (fakeItem != null)
                 {
                     int index = item.List.IndexOf(item);
@@ -197,8 +197,8 @@ namespace My.VKMusic.Views
         private void ItemsControl_DragOver(object sender, DragEventArgs e)
         {
             ItemsControl dragControl = sender as ItemsControl;
-            ObservableCollection<TestItem> list = dragControl.DataContext as ObservableCollection<TestItem>;
-            TestItem fakeItem = list.FirstOrDefault(x => x.IsDragged == true);
+            ObservableCollection<ADragVM> list = dragControl.DataContext as ObservableCollection<ADragVM>;
+            ADragVM fakeItem = list.FirstOrDefault(x => x.IsDragged == true);
             if (fakeItem != null)
             {
                 int index = list.Count - 1;
@@ -209,10 +209,10 @@ namespace My.VKMusic.Views
 
         private void ItemsControl_DragEnter(object sender, DragEventArgs e)
         {
-            var dragItem = this._dragdropWindow.DataContext as TestItem;
+            var dragItem = this._dragdropWindow.DataContext as ADragVM;
 
             ItemsControl dragControl = sender as ItemsControl;
-            ObservableCollection<TestItem> list = dragControl.DataContext as ObservableCollection<TestItem>;
+            ObservableCollection<ADragVM> list = dragControl.DataContext as ObservableCollection<ADragVM>;
 
             if (dragItem.List != list)
             {
@@ -220,10 +220,10 @@ namespace My.VKMusic.Views
                 dragItem.List = list;
             }
 
-            TestItem fakeItem = list.FirstOrDefault(x => x.IsDragged == true);
+            ADragVM fakeItem = list.FirstOrDefault(x => x.IsDragged == true);
             if (fakeItem == null)
             {
-                var clone = dragItem.Clone() as TestItem;
+                var clone = dragItem.Clone() as ADragVM;
                 clone.IsDragged = true;
                 list.Add(clone);
             }
@@ -237,18 +237,26 @@ namespace My.VKMusic.Views
        
     }
 
-    public class TestItem : ObservableObject, ICloneable
+    public abstract class ADragVM : ObservableObject, ICloneable
     {
 
         private bool _IsDragged;
 
-        public  ObservableCollection<TestItem> List { get; set; }
-        public bool IsDragged { 
+        public  ObservableCollection<ADragVM> List { get; set; }
+
+        public bool IsDragged
+        {
             get { return _IsDragged; }
             set { _IsDragged = value; OnPropertyChanged("IsDragged"); }
         }
+
+        public abstract object Clone();
+    }
+
+    public class DragTestItem : ADragVM
+    {
         private int i;
-        public TestItem(int i)
+        public DragTestItem(int i)
         {
             this.i = i;
         }
@@ -257,9 +265,9 @@ namespace My.VKMusic.Views
             return i.ToString();
         }
 
-        public object Clone()
+        public override object Clone()
         {
-            return new TestItem(i);
+            return new DragTestItem(i);
         }
     }
 }
