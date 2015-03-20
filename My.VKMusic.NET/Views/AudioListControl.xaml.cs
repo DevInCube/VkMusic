@@ -1,4 +1,5 @@
-﻿using System;
+﻿using My.VKMusic.Views.DragManagement;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,12 +21,28 @@ namespace My.VKMusic.Views
     /// </summary>
     public partial class AudioListControl : UserControl
     {
+
+        public DragManager DragManager
+        {
+            get { return (DragManager)this.GetValue(DragManagerProperty); }
+            set { this.SetValue(DragManagerProperty, value); }
+        }
+
+        public static readonly DependencyProperty DragManagerProperty = DependencyProperty.Register(
+          "DragManager", typeof(DragManager), typeof(AudioListControl), new PropertyMetadata(null, changed));
+
+        private static void changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            (d as AudioListControl).DragManager = e.NewValue as DragManager;
+        }
+
+
         public AudioListControl()
         {
             InitializeComponent();
         }
 
-        private void ItemsControl_Drop(object sender, DragEventArgs e)
+        private void AudioItem_DragEnter(object sender, DragEventArgs e)
         {
 
         }
@@ -34,5 +51,13 @@ namespace My.VKMusic.Views
         {
 
         }
+
+        private void ItemsControl_DragLeave(object sender, DragEventArgs e)
+        {
+
+        }
+
+
+
     }
 }

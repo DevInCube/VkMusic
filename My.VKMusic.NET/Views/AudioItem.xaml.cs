@@ -72,9 +72,9 @@ namespace My.VKMusic.Views
         {
             if (sender is AudioItem)
             {
-                AudioItem draggedItem = sender as AudioItem;
-                CreateDragDropWindow(draggedItem);
-                DragDrop.DoDragDrop(draggedItem, draggedItem.DataContext, DragDropEffects.Move);
+                //AudioItem draggedItem = sender as AudioItem;
+                //CreateDragDropWindow(draggedItem);
+                //DragDrop.DoDragDrop(draggedItem, draggedItem.DataContext, DragDropEffects.Move);
                 //draggedItem.IsSelected = true;
             }
         }
@@ -130,7 +130,8 @@ namespace My.VKMusic.Views
         void AudioItem_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             AudioFile file = this.DataContext as AudioFile;
-            file.PropertyChanged += file_PropertyChanged;
+            if (file != null)
+                file.PropertyChanged += file_PropertyChanged;
         }
 
         void file_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -146,14 +147,14 @@ namespace My.VKMusic.Views
 
         void item_MouseLeave(object sender, MouseEventArgs e)
         {
-            item.Background = (this.DataContext as AudioFile).IsSelected ? currentColor : Brushes.WhiteSmoke;
-            Cursor = Cursors.Arrow;
+            //item.Background = (this.DataContext as AudioFile).IsSelected ? currentColor : Brushes.WhiteSmoke;
+            //Cursor = Cursors.Arrow;
         }
 
         void item_MouseEnter(object sender, MouseEventArgs e)
         {
-            item.Background = (this.DataContext as AudioFile).IsSelected ? currentColor : hoverColor;
-            Cursor = Cursors.Hand;
+            //item.Background = (this.DataContext as AudioFile).IsSelected ? currentColor : hoverColor;
+            //Cursor = Cursors.Hand;
         }
     }
 }

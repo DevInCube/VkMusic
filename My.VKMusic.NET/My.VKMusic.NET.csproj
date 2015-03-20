@@ -82,6 +82,9 @@
     <Compile Include="Views\DragManagement\ADragVM.cs" />
     <Compile Include="Views\DragManagement\DragActionType.cs" />
     <Compile Include="Views\DragManagement\DragManager.cs" />
+    <Compile Include="Views\PlayerTestWindow.xaml.cs">
+      <DependentUpon>PlayerTestWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\TestDDWindow.xaml.cs">
       <DependentUpon>TestDDWindow.xaml</DependentUpon>
     </Compile>
@@ -97,6 +100,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Views\AudioListControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\PlayerTestWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

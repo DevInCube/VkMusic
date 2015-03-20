@@ -1,0 +1,11 @@
+﻿<Window x:Class="My.VKMusic.Views.PlayerTestWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:v="clr-namespace:My.VKMusic.Views" 
+        x:Name="this"
+        Title="PlayerTestWindow" Height="300" Width="300">
+    <Grid>
+        <v:AudioListControl DataContext="{Binding Items}" 
+                            DragManager="{Binding DataContext.DragManager, ElementName=this}"/>
+    </Grid>
+</Window>

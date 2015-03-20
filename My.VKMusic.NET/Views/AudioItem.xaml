@@ -16,12 +16,14 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <Button Content="Play" Command="{Binding DataContext.PlayAudioCommand, ElementName=this}" CommandParameter="{Binding}" />
             <Label x:Name="artistLabel" Content="{Binding Info.Artist, FallbackValue=Artist}" Grid.Column="1" FontWeight="Bold" Foreground="#2B587A"></Label>
             <Label x:Name="divLabel" Content="-" Grid.Column="2"></Label>
             <Label x:Name="titleLabel" Content="{Binding Info.Title,FallbackValue=Title}" Grid.Column="3"></Label>
             <Label Content="{Binding Duration, FallbackValue=00:00}" Grid.Column="4" FontSize="10" Foreground="DimGray"></Label>
+            <Label Content="..." Grid.Column="5" Height="Auto" VerticalContentAlignment="Center" PreviewMouseLeftButtonDown="AudioItem_PreviewMouseLeftButtonDown"/>
         </Grid>
     </Grid>
 </UserControl>
