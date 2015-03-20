@@ -85,21 +85,28 @@ namespace My.VKMusic.Views
                 item.List.Insert(index, clone);
                 CreateDragDropWindow(dragControl.Parent as Visual);                
                 var ret = DragDrop.DoDragDrop(dragControl, dragControl.DataContext, DragDropEffects.Move);
-                if (ret == DragDropEffects.None)
-                {
-                    CloseDragWindow(item);
-                }
+                CloseDragWindow(false);
             }
         }
 
-        void CloseDragWindow(TestItem dropData)
+        void CloseDragWindow(bool success)
         {
-            TestItem fakeItem = dropData.List.FirstOrDefault(x => x.IsDragged == true);
-            if (fakeItem!=null)
-                dropData.List.Remove(fakeItem);
-
             if (_dragdropWindow != null)
             {
+                TestItem dropData = _dragdropWindow.DataContext as TestItem;
+
+                TestItem fakeItem = dropData.List.FirstOrDefault(x => x.IsDragged == true);
+
+                if (fakeItem != null)
+                {
+                    if (!success)
+                    {
+                        int index = dropData.List.IndexOf(fakeItem);
+                        dropData.List.Insert(index, dropData);
+                    }
+                    dropData.List.Remove(fakeItem);
+                }
+
                 _dragdropWindow.Close();
                 _dragdropWindow = null;
             }
@@ -130,7 +137,7 @@ namespace My.VKMusic.Views
                 list.Insert(index, droppedData);
                 e.Handled = true;
             }
-            CloseDragWindow(droppedData);
+            CloseDragWindow(true);
         }
 
         private void Label_GiveFeedback(object sender, GiveFeedbackEventArgs e)

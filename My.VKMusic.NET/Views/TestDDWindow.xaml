@@ -12,12 +12,11 @@
             <ColumnDefinition Width="121*"/>
             <ColumnDefinition Width="121*"/>
         </Grid.ColumnDefinitions>
-        <ItemsControl Background="LightCyan"  DataContext="{Binding Items1}" ItemsSource="{Binding}" AllowDrop="True" Drop="ItemsControl_Drop" DragOver="ItemsControl_DragOver" DragEnter="ItemsControl_DragEnter" DragLeave="ItemsControl_DragLeave">
+        <ItemsControl Background="LightCyan"  DataContext="{Binding Items1}" ItemsSource="{Binding}" AllowDrop="True" Drop="ItemsControl_Drop" DragOver="ItemsControl_DragOver" DragEnter="ItemsControl_DragEnter" DragLeave="ItemsControl_DragLeave" >
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <DockPanel DataContext="{Binding}" Background="LightGreen" AllowDrop="True" Drop="ItemsControl_Drop" Opacity="{Binding IsDragged, Converter={StaticResource DragConv}}" DragOver="DockPanel_DragOver">
-                        <Label Margin="3" DockPanel.Dock="Right" Cursor="Hand" Background="WhiteSmoke" Content="..." AllowDrop="True" PreviewMouseLeftButtonDown="Button_PreviewMouseLeftButtonDown" GiveFeedback="Label_GiveFeedback"/>
-                        <Border DockPanel.Dock="Bottom" BorderBrush="Black" BorderThickness="0,2,0,0"/>
+                    <DockPanel DataContext="{Binding}" Background="LightGreen" AllowDrop="True" Drop="ItemsControl_Drop" Opacity="{Binding IsDragged, Converter={StaticResource DragConv}}" DragOver="DockPanel_DragOver" >
+                        <Label  Margin="3" DockPanel.Dock="Right" Cursor="Hand" Background="WhiteSmoke" Content="..." AllowDrop="True" PreviewMouseLeftButtonDown="Button_PreviewMouseLeftButtonDown" GiveFeedback="Label_GiveFeedback" Width="23" HorizontalContentAlignment="Center"/>                        
                         <Label  Content="{Binding}" />
                     </DockPanel>
                 </DataTemplate>
@@ -26,9 +25,8 @@
         <ItemsControl Background="LightGoldenrodYellow" DataContext="{Binding Items2}" ItemsSource="{Binding}"  Grid.Column="1" Drop="ItemsControl_Drop" AllowDrop="True" DragOver="ItemsControl_DragOver" DragEnter="ItemsControl_DragEnter" DragLeave="ItemsControl_DragLeave">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <DockPanel DataContext="{Binding}" Background="LightSkyBlue" AllowDrop="True" Drop="ItemsControl_Drop" Opacity="{Binding IsDragged, Converter={StaticResource DragConv}}" DragOver="DockPanel_DragOver">
-                        <Label Margin="3" DockPanel.Dock="Right" Cursor="Hand" Background="WhiteSmoke" Content="..." PreviewMouseLeftButtonDown="Button_PreviewMouseLeftButtonDown" GiveFeedback="Label_GiveFeedback"/>
-                        <Border DockPanel.Dock="Bottom" BorderBrush="Black" BorderThickness="0,2,0,0"/>
+                    <DockPanel DataContext="{Binding}" Background="LightSkyBlue" AllowDrop="True" Drop="ItemsControl_Drop" Opacity="{Binding IsDragged, Converter={StaticResource DragConv}}" DragOver="DockPanel_DragOver" >
+                        <Label Margin="3" DockPanel.Dock="Right" Cursor="Hand" Background="WhiteSmoke" Content="..." PreviewMouseLeftButtonDown="Button_PreviewMouseLeftButtonDown" GiveFeedback="Label_GiveFeedback" Width="23" HorizontalContentAlignment="Center"/>
                         <Label  Content="{Binding}" />
                     </DockPanel>
                 </DataTemplate>
