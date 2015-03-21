@@ -21,7 +21,7 @@ namespace My.VKMusic.Views.Converters
                 val = bool.Parse(value.ToString());
             else
                 val = false; // @todo
-            return (invert ? !val : val) ? Visibility.Visible : Visibility.Hidden;
+            return (invert ? !val : val) ? Visibility.Visible : Visibility.Collapsed;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)

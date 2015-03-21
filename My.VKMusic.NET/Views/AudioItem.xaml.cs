@@ -23,14 +23,70 @@ namespace My.VKMusic.Views
     public partial class AudioItem : UserControl
     {
 
+        public MouseButtonEventHandler OnDrag
+        {
+            get { return (MouseButtonEventHandler)this.GetValue(OnDragProperty); }
+            set { this.SetValue(OnDragProperty, value); }
+        }
+
+        public static readonly DependencyProperty OnDragProperty = DependencyProperty.Register(
+          "OnDrag", typeof(MouseButtonEventHandler), typeof(AudioItem), new PropertyMetadata(null, changed));
+
+        private static void changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            (d as AudioItem).drag.PreviewMouseLeftButtonDown += e.NewValue as MouseButtonEventHandler;
+        }
+
+        public ICommand PlayAudioCommand
+        {
+            get { return (ICommand)this.GetValue(PlayAudioCommandProperty); }
+            set { this.SetValue(PlayAudioCommandProperty, value); }
+        }
+
+        public static readonly DependencyProperty PlayAudioCommandProperty = DependencyProperty.Register(
+          "PlayAudioCommand", typeof(ICommand), typeof(AudioItem), new PropertyMetadata(null, PlayAudioCommandchanged));
+
+        private static void PlayAudioCommandchanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            (d as AudioItem).PlayAudioCommand = e.NewValue as ICommand;
+        }
+
+        public ICommand EditAudioCommand
+        {
+            get { return (ICommand)this.GetValue(EditAudioCommandProperty); }
+            set { this.SetValue(EditAudioCommandProperty, value); }
+        }
+
+        public static readonly DependencyProperty EditAudioCommandProperty = DependencyProperty.Register(
+          "EditAudioCommand", typeof(ICommand), typeof(AudioItem), new PropertyMetadata(null, EditAudioCommandchanged));
+
+        private static void EditAudioCommandchanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            (d as AudioItem).EditAudioCommand = e.NewValue as ICommand;
+        }
+
+        public ICommand DeleteAudioCommand
+        {
+            get { return (ICommand)this.GetValue(DeleteAudioCommandProperty); }
+            set { this.SetValue(DeleteAudioCommandProperty, value); }
+        }
+
+        public static readonly DependencyProperty DeleteAudioCommandProperty = DependencyProperty.Register(
+          "DeleteAudioCommand", typeof(ICommand), typeof(AudioItem), new PropertyMetadata(null, DeleteAudioCommandchanged));
+
+        private static void DeleteAudioCommandchanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            (d as AudioItem).DeleteAudioCommand = e.NewValue as ICommand;
+        }
+
         Brush artistFG = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#2B587A"));
         Brush currentColor = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#45668e"));
         Brush hoverColor = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#E1E7ED"));
-        private Window _dragdropWindow;
 
         public AudioItem()
         {
             InitializeComponent();
+            
 
             this.DataContextChanged += AudioItem_DataContextChanged;
             item.MouseEnter += item_MouseEnter;
@@ -40,15 +96,6 @@ namespace My.VKMusic.Views
             this.PreviewMouseLeftButtonDown += AudioItem_PreviewMouseLeftButtonDown;            
             this.Drop += AudioItem_Drop;            
             //this.GiveFeedback += AudioItem_GiveFeedback;
-        }
-
-        void AudioItem_GiveFeedback(object sender, GiveFeedbackEventArgs e)
-        {
-            Win32Point w32Mouse = new Win32Point();
-            GetCursorPos(ref w32Mouse);
-
-            this._dragdropWindow.Left = w32Mouse.X+20;
-            this._dragdropWindow.Top = w32Mouse.Y+20;
         }
 
         void AudioItem_Drop(object sender, DragEventArgs e)
@@ -79,49 +126,6 @@ namespace My.VKMusic.Views
             }
         }
 
-        private void CreateDragDropWindow(Visual dragElement)
-        {
-            this._dragdropWindow = new Window();
-            _dragdropWindow.WindowStyle = WindowStyle.None;
-            _dragdropWindow.AllowsTransparency = true;
-            _dragdropWindow.AllowDrop = false;
-            _dragdropWindow.Background = null;
-            _dragdropWindow.IsHitTestVisible = false;
-            _dragdropWindow.SizeToContent = SizeToContent.WidthAndHeight;
-            _dragdropWindow.Topmost = true;
-            _dragdropWindow.ShowInTaskbar = false;
-
-            Rectangle r = new Rectangle();
-            r.Width = ((FrameworkElement)dragElement).ActualWidth;
-            r.Height = ((FrameworkElement)dragElement).ActualHeight;
-            r.Fill = new VisualBrush(dragElement);
-            this._dragdropWindow.Content = r;
-
-            Win32Point w32Mouse = new Win32Point();
-            GetCursorPos(ref w32Mouse);
-
-            this._dragdropWindow.Left = w32Mouse.X;
-            this._dragdropWindow.Top = w32Mouse.Y;
-            this._dragdropWindow.Show();
-        }
-
-        [DllImport("user32.dll")]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        internal static extern bool GetCursorPos(ref Win32Point pt);
-
-        [StructLayout(LayoutKind.Sequential)]
-        internal struct Win32Point
-        {
-            public Int32 X;
-            public Int32 Y;
-        };
-        public static Point GetMousePosition()
-        {
-            Win32Point w32Mouse = new Win32Point();
-            GetCursorPos(ref w32Mouse);
-            return new Point(w32Mouse.X, w32Mouse.Y);
-        }
-
         void AudioItem_MouseUp(object sender, MouseButtonEventArgs e)
         {
             //(this.DataContext as AudioFile).Play();
@@ -147,14 +151,16 @@ namespace My.VKMusic.Views
 
         void item_MouseLeave(object sender, MouseEventArgs e)
         {
-            //item.Background = (this.DataContext as AudioFile).IsSelected ? currentColor : Brushes.WhiteSmoke;
-            //Cursor = Cursors.Arrow;
+            var context = this.DataContext as DragTestItem2;
+            context.IsMouseHover = false;
+            item.Background = context.IsSelected ? currentColor : Brushes.WhiteSmoke;
         }
 
         void item_MouseEnter(object sender, MouseEventArgs e)
         {
-            //item.Background = (this.DataContext as AudioFile).IsSelected ? currentColor : hoverColor;
-            //Cursor = Cursors.Hand;
+            var context = this.DataContext as DragTestItem2;
+            context.IsMouseHover = true;
+            item.Background = context.IsSelected ? currentColor : hoverColor;
         }
     }
 }

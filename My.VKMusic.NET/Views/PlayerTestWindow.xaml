@@ -5,7 +5,11 @@
         x:Name="this"
         Title="PlayerTestWindow" Height="300" Width="300">
     <Grid>
-        <v:AudioListControl DataContext="{Binding Items}" 
-                            DragManager="{Binding DataContext.DragManager, ElementName=this}"/>
+        <v:AudioListControl DataContext="{Binding Items}"
+                            PlayAudioCommand ="{Binding DataContext.PlayAudioCommand, ElementName=this}"
+                            EditAudioCommand ="{Binding DataContext.EditAudioCommand, ElementName=this}"
+                            DeleteAudioCommand ="{Binding DataContext.DeleteAudioCommand, ElementName=this}"
+                            DragManager="{Binding DataContext.DragManager, ElementName=this}"
+                            OnDrag="{Binding DataContext.OnDrag, ElementName=this}"/>
     </Grid>
 </Window>

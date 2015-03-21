@@ -3,20 +3,32 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:v="clr-namespace:My.VKMusic.Views" 
+              xmlns:conv="clr-namespace:My.VKMusic.Views.Converters" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
+             x:Name="this"
              d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <conv:VisibilityConverter x:Key="Vis"/>
+        <conv:DragConverter x:Key="DragConv"/>
+    </UserControl.Resources>
     <ScrollViewer VerticalScrollBarVisibility="Auto">
-        <ItemsControl DataContext="{Binding}" ItemsSource="{Binding}" AllowDrop="True" 
+        <ItemsControl DataContext="{Binding}" ItemsSource="{Binding}" 
+                      AllowDrop="True" 
                       Drop="AudioItem_Drop"
                       DragEnter="AudioItem_DragEnter"
                       DragLeave="ItemsControl_DragLeave">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <v:AudioItem DataContext="{Binding}"
+                                 PlayAudioCommand="{Binding PlayAudioCommand, ElementName=this}"
+                                 EditAudioCommand="{Binding EditAudioCommand, ElementName=this}"
+                                 DeleteAudioCommand="{Binding DeleteAudioCommand, ElementName=this}"
+                                 AllowDrop="True"                                 
                                  Drop="AudioItem_Drop"  
                                  DragEnter="AudioItem_DragEnter"
-                                 AllowDrop="True"
+                                 OnDrag="{Binding OnDrag, ElementName=this}"
+                                 Opacity="{Binding IsDropPreview, Converter={StaticResource DragConv}}"
                                  />
                 </DataTemplate>
             </ItemsControl.ItemTemplate>

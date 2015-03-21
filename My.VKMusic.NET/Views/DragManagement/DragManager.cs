@@ -9,6 +9,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using VkNET.Models;
 
 namespace My.VKMusic.Views.DragManagement
 {
@@ -18,9 +19,12 @@ namespace My.VKMusic.Views.DragManagement
         private Window _dragdropWindow;
         private ObservableCollection<ADragVM> blockedList = null;
 
+        public event EventHandler<AudioReorderEventArgs> Reorder;
+
         internal  void OnDragStart(object sender)
         {
-            Label dragControl = sender as Label;
+            FrameworkElement dragControl = sender as FrameworkElement;            
+            dragControl.GiveFeedback += dragControl_GiveFeedback;
 
             ADragVM item = (dragControl.DataContext as ADragVM);
             int index = item.List.IndexOf(item);
@@ -29,9 +33,14 @@ namespace My.VKMusic.Views.DragManagement
             var clone = item.Clone() as ADragVM;
             clone.IsDropPreview = true;
             item.List.Insert(index, clone);
-            CreateDragDropWindow(dragControl.Parent as Visual);
+            CreateDragDropWindow(dragControl.Tag as Visual);
             var ret = DragDrop.DoDragDrop(dragControl, dragControl.DataContext, DragDropEffects.Move);
             CloseDragWindow(false);
+        }
+
+        void dragControl_GiveFeedback(object sender, GiveFeedbackEventArgs e)
+        {
+            this.GiveFeedbackEvent();
         }
 
         private void CreateDragDropWindow(Visual dragElement)
@@ -56,11 +65,10 @@ namespace My.VKMusic.Views.DragManagement
             Win32Point w32Mouse = new Win32Point();
             CursorHelper.GetCursorPos(ref w32Mouse);
 
-            this._dragdropWindow.Left = w32Mouse.X;
-            this._dragdropWindow.Top = w32Mouse.Y;
+            SetWindowPos(w32Mouse);
             this._dragdropWindow.Show();
 
-            var dragItem = (dragElement as DockPanel).DataContext as ADragVM;
+            var dragItem = (dragElement as FrameworkElement).DataContext as ADragVM;
             this._dragdropWindow.DataContext = new DragContext(dragItem, dragItem.List, DragActionType.Reorder);
         }
 
@@ -84,50 +92,61 @@ namespace My.VKMusic.Views.DragManagement
                     dragItem.List.Remove(fakeItem);
                 }
 
+                if (Reorder != null)
+                {
+                    var list = dragItem.List;
+                    int index = list.IndexOf(dragItem);
+                    var audio = new AudioFileInfo(); //@todo
+                    var before = index > 0 ? new AudioFileInfo() : null; //@todo
+                    var after = index < list.Count - 1 ? new AudioFileInfo() : null; //@todo
+                    Reorder.Invoke(this, new AudioReorderEventArgs(audio, before, after)); //@todo
+                }
+
                 _dragdropWindow.Close();
                 _dragdropWindow = null;
             }
         }
 
         internal void OnDrop(object sender, DragEventArgs e)
-        {
+        {            
             var dragContext = this._dragdropWindow.DataContext as DragContext;
             var dragItem = dragContext.Item;
+            ObservableCollection<ADragVM> list = null;
 
             if (sender is ItemsControl)
             {
                 if (dragContext.DragAction == DragActionType.Reorder &&
                     (sender as ItemsControl).DataContext != dragItem.List) return;
 
-                var target = (sender as ItemsControl).DataContext as ObservableCollection<ADragVM>;
-                if (!target.Contains(dragItem))
-                    target.Add(dragItem);
+                list = (sender as ItemsControl).DataContext as ObservableCollection<ADragVM>;
+                if (!list.Contains(dragItem))
+                    list.Add(dragItem);
                 else
                 {
-                    target.Remove(dragItem);
-                    target.Add(dragItem);
+                    list.Remove(dragItem);
+                    list.Add(dragItem);
                 }
             }
-            if (sender is DockPanel)
+            if (sender is UserControl)
             {
-                var targetElem = sender as DockPanel;
+                var targetElem = sender as UserControl;
                 var targetItem = targetElem.DataContext as ADragVM;
 
                 if (dragContext.DragAction == DragActionType.Reorder &&
                     targetItem.List != dragItem.List) return;
 
-                var list = targetItem.List;
+                list = targetItem.List;
                 int index = list.IndexOf(targetItem);
                 list.Remove(dragItem);
                 list.Insert(index, dragItem);
                 e.Handled = true;
-            }
-
+            }           
             CloseDragWindow(true);
 
             ADragVM fakeItem = (dragContext.SourceList as ObservableCollection<ADragVM>).FirstOrDefault(x => x.IsDropPreview == true);
             if (fakeItem != null)
                 fakeItem.IsDropPreview = false;
+           
         }
 
         internal void OnDragLeave(object sender, DragEventArgs e)
@@ -157,9 +176,9 @@ namespace My.VKMusic.Views.DragManagement
 
         internal void OnDragEnter(object sender, DragEventArgs e)
         {
-            if (sender is DockPanel)
+            if (sender is UserControl)
             {
-                DockPanel dragControl = sender as DockPanel;
+                UserControl dragControl = sender as UserControl;
                 ADragVM item = dragControl.DataContext as ADragVM;
                 var thisList = item.List;
 
@@ -233,6 +252,11 @@ namespace My.VKMusic.Views.DragManagement
             Win32Point w32Mouse = new Win32Point();
             CursorHelper.GetCursorPos(ref w32Mouse);
 
+            SetWindowPos(w32Mouse);
+        }
+
+        private void SetWindowPos(Win32Point w32Mouse)
+        {
             this._dragdropWindow.Left = w32Mouse.X - _dragdropWindow.ActualWidth - 10;
             this._dragdropWindow.Top = w32Mouse.Y + 10;
         }

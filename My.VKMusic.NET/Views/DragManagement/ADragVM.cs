@@ -11,7 +11,7 @@ namespace My.VKMusic.Views.DragManagement
     public abstract class ADragVM : ObservableObject, ICloneable, IEquatable<ADragVM>
     {
 
-        private bool _IsDropPreview;
+        private bool _IsDropPreview, _IsMouseHover, _IsSelected;
 
         public ObservableCollection<ADragVM> List { get; set; }
 
@@ -19,6 +19,18 @@ namespace My.VKMusic.Views.DragManagement
         {
             get { return _IsDropPreview; }
             set { _IsDropPreview = value; OnPropertyChanged("IsDropPreview"); }
+        }
+
+        public bool IsMouseHover
+        {
+            get { return _IsMouseHover; }
+            set { _IsMouseHover = value; OnPropertyChanged("IsMouseHover"); }
+        }
+
+        public bool IsSelected
+        {
+            get { return _IsSelected; }
+            set { _IsSelected = value; OnPropertyChanged("IsSelected"); }
         }
 
         public abstract object Clone();

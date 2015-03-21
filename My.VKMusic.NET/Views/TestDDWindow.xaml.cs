@@ -124,4 +124,42 @@ namespace My.VKMusic.Views
             return this.i == (other as DragTestItem).i;
         }
     }
+
+    public class DragTestItem2 : ADragVM
+    {
+        private bool _IsPlaying;
+        public class InfoClass
+        {
+            public string Artist { get; set; }
+            public string Title { get; set; }
+        }
+
+        public InfoClass Info { get; set; }
+        public bool IsPlaying
+        {
+            get { return _IsPlaying;  }
+            set { _IsPlaying = value; OnPropertyChanged("IsPlaying"); }
+        }
+        public DragTestItem2(string artist, string title)
+        {
+            this.Info = new InfoClass() { Artist = artist, Title = title };
+        }
+        public override string ToString()
+        {
+            return Info.Artist + " - " + Info.Title;
+        }
+
+        public override object Clone()
+        {
+            return new DragTestItem2(Info.Artist, Info.Title);
+        }
+
+        public override bool Equals(ADragVM other)
+        {
+            var o = (other as DragTestItem2);
+            return this.Info.Artist.Equals(o.Info.Artist) &&
+                this.Info.Title.Equals(o.Info.Title)
+                && this.IsDropPreview == o.IsDropPreview;
+        }
+    }
 }

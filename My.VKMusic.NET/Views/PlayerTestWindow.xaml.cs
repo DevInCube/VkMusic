@@ -1,4 +1,5 @@
-﻿using My.VKMusic.Views.DragManagement;
+﻿using My.VKMusic.ViewModels;
+using My.VKMusic.Views.DragManagement;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -24,21 +25,42 @@ namespace My.VKMusic.Views
     {
         public DragManager DragManager { get; set; }
         public ObservableCollection<ADragVM> Items { get; set; }
-
+        public MouseButtonEventHandler OnDrag { get; set; }
+        public ICommand PlayAudioCommand { get; set; }
+        public ICommand EditAudioCommand { get; set; }
+        public ICommand DeleteAudioCommand { get; set; }
 
         public PlayerTestWindow()
         {
             InitializeComponent();
             this.Items = new ObservableCollection<ADragVM>();
             this.Items.CollectionChanged += Items_CollectionChanged;
-            this.Items.Add(new DragTestItem(1));
-            this.Items.Add(new DragTestItem(2));
-            this.Items.Add(new DragTestItem(3));
-            this.Items.Add(new DragTestItem(10));
+            this.Items.Add(new DragTestItem2("Muse","Resistance"));
+            this.Items.Add(new DragTestItem2("Nickelback", "op"));
+            this.Items.Add(new DragTestItem2("Tool", "Tool"));
+            this.Items.Add(new DragTestItem2("Muse", "Uprising"));
 
             this.DragManager = new DragManager();
-
+            DragManager.Reorder += DragManager_Reorder;
+            this.OnDrag = (MouseButtonEventHandler)((sender, e) => { DragManager.OnDragStart(sender); });
+            this.PlayAudioCommand = new RelayCommand((o) => {
+                (o as DragTestItem2).IsPlaying = !(o as DragTestItem2).IsPlaying;
+            });
+            this.EditAudioCommand = new RelayCommand((o) =>
+            {
+                //@todo   
+            });
+            this.DeleteAudioCommand = new RelayCommand((o) =>
+            {
+                var item = (o as DragTestItem2);
+                item.List.Remove(item);
+            });
             this.DataContext = this;
+        }
+
+        void DragManager_Reorder(object sender, AudioReorderEventArgs e)
+        {
+            return; //@todo
         }
 
         void Items_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)

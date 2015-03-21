@@ -2,10 +2,13 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+              xmlns:conv="clr-namespace:My.VKMusic.Views.Converters" 
+              xmlns:res="clr-namespace:My.VKMusic.Properties" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
              d:DesignHeight="50" d:DesignWidth="300">
     <UserControl.Resources>
+        <conv:VisibilityConverter x:Key="Vis"/>
         
     </UserControl.Resources>
     <Grid Background="WhiteSmoke" MaxHeight="36" x:Name="item">
@@ -18,12 +21,25 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <Button Content="Play" Command="{Binding DataContext.PlayAudioCommand, ElementName=this}" CommandParameter="{Binding}" />
+            <Button Content="I&gt;" Width="26" Command="{Binding PlayAudioCommand, ElementName=this}" CommandParameter="{Binding}"
+                    Visibility="{Binding IsPlaying, Converter={StaticResource Vis}, ConverterParameter=true}"/>
+            <Button Content="I I" Width="26" Command="{Binding PlayAudioCommand, ElementName=this}" CommandParameter="{Binding}"
+                    Visibility="{Binding IsPlaying, Converter={StaticResource Vis}, ConverterParameter=false}"/>
             <Label x:Name="artistLabel" Content="{Binding Info.Artist, FallbackValue=Artist}" Grid.Column="1" FontWeight="Bold" Foreground="#2B587A"></Label>
             <Label x:Name="divLabel" Content="-" Grid.Column="2"></Label>
             <Label x:Name="titleLabel" Content="{Binding Info.Title,FallbackValue=Title}" Grid.Column="3"></Label>
-            <Label Content="{Binding Duration, FallbackValue=00:00}" Grid.Column="4" FontSize="10" Foreground="DimGray"></Label>
-            <Label Content="..." Grid.Column="5" Height="Auto" VerticalContentAlignment="Center" PreviewMouseLeftButtonDown="AudioItem_PreviewMouseLeftButtonDown"/>
+            <Label Content="{Binding Duration, FallbackValue=00:00}" Grid.Column="4" FontSize="10" Foreground="DimGray"
+                   Visibility="{Binding IsMouseHover, Converter={StaticResource Vis}, ConverterParameter=true}"></Label>
+            <StackPanel Grid.Column="5" Orientation="Horizontal"
+                Visibility="{Binding IsMouseHover, Converter={StaticResource Vis}, ConverterParameter=false}">                
+                <Label x:Name="drag" Tag="{Binding ElementName=item}" Content="..." Height="Auto" VerticalContentAlignment="Center" PreviewMouseLeftButtonDown="AudioItem_PreviewMouseLeftButtonDown"/>
+                <Button Content="E"  Height="26" Width="26" FontWeight="Bold" BorderThickness="0"  
+                        Command="{Binding EditAudioCommand, ElementName=this}" CommandParameter="{Binding}"
+                    Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"/>
+                <Button Content="X" Height="26" Width="26" FontWeight="Bold" BorderThickness="0"
+                        Command="{Binding DeleteAudioCommand, ElementName=this}" CommandParameter="{Binding}"
+                    Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"/>
+            </StackPanel >
         </Grid>
     </Grid>
 </UserControl>
