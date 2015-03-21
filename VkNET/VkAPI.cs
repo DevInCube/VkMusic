@@ -188,6 +188,19 @@ namespace VkNET
             return ToList(res);
         }
 
+        public void AudioReorder(long audio_id, long owner_id, long? before, long? after)
+        {
+            var parameters = new ParametersCollection() {
+                {"audio_id", audio_id},
+                {"owner_id", owner_id},
+                {"before", before},
+                {"after", after},
+            };            
+            string request = CreateMethodRequest("audio.reorder", parameters);
+            var res = GetJSONResponse(request)["response"];
+            CheckForGlobalError(res);
+        }
+
         public void AudioSetBroadcast(long audio_id)
         {
             var parameters = new ParametersCollection() {

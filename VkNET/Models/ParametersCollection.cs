@@ -38,7 +38,8 @@ namespace VkNET.Models
         {
             NameValueCollection parameters = System.Web.HttpUtility.ParseQueryString(string.Empty);
             foreach (string key in this.Keys)
-                parameters[key] = this[key] == null ? "" : this[key].ToString();
+                if (this[key] == null) continue;
+                else parameters[key] = this[key].ToString();
             return parameters.ToString();
         }
     }

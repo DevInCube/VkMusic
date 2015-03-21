@@ -23,7 +23,8 @@ namespace VkNET.ConsoleTest
             {
                 Console.WriteLine("Auth OK");
                 //vk.AudioGetAlbums().ForEach(a => Console.WriteLine(a));
-                vk.AudioDeleteAlbum(1111);
+                //vk.AudioDeleteAlbum(1111);
+                //vk.AudioReorder(123, 123, 15, null);
                 //Console.WriteLine(vk.AudioAddAlbum("Root/Test"));
                 //Console.WriteLine(vk.AudioGetLyrics(2428970));
                 //Console.WriteLine(vk.AudioSearch("Muse").Count);
