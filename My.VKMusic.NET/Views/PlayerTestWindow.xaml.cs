@@ -76,7 +76,7 @@ namespace My.VKMusic.Views
             this.Items.CollectionChanged += Items_CollectionChanged;            
 
             this.DragManager = new DragManager();
-            CanReorder = true;
+            this.CanReorder = true;
             DragManager.Reorder += DragManager_Reorder;
             this.OnDrag = (MouseButtonEventHandler)((sender, e) => { DragManager.OnDragStart(sender); });
             this.PlayAudioCommand = new RelayCommand((o) => {
@@ -195,7 +195,7 @@ namespace My.VKMusic.Views
 
         void DragManager_Reorder(object sender, AudioReorderEventArgs e)
         {
-            return; //@todo
+            audioSource.Reorder(e.Audio, e.BeforeAudio, e.AfterAudio);
         }
 
         void Items_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -261,6 +261,12 @@ namespace My.VKMusic.Views
         {
             items = new List<AudioFileInfo>(files);
             items.Shuffle();
+        }
+
+
+        public void Reorder(AudioFileInfo audioFileInfo1, AudioFileInfo audioFileInfo2, AudioFileInfo audioFileInfo3)
+        {
+            //throw new NotImplementedException();
         }
     }
 }

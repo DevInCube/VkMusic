@@ -260,6 +260,7 @@ namespace VkNET
 
         private void CheckForGlobalError(JToken res)
         {
+            if (!res.HasValues) return;
             var error = res["error"];
             if (error != null)
             {

@@ -107,7 +107,7 @@
                 </StackPanel>
             </Grid>        
             <v:AudioListControl DataContext="{Binding Items}"
-                                CanReorder ="{Binding CanReorder, ElementName=this}"
+                                CanReorder ="{Binding DataContext.CanReorder, ElementName=this}"
                                 PlayAudioCommand ="{Binding DataContext.PlayAudioCommand, ElementName=this}"
                                 EditAudioCommand ="{Binding DataContext.EditAudioCommand, ElementName=this}"
                                 DeleteAudioCommand ="{Binding DataContext.DeleteAudioCommand, ElementName=this}"

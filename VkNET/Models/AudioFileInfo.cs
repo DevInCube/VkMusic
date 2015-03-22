@@ -31,6 +31,7 @@ namespace VkNET.Models
             return new AudioFileInfo()
             {
                 Id = token["aid"].Value<long>(),
+                OwnerId = token["owner_id"].Value<long>(),
                 Artist = token["artist"].Value<string>().AsUTF8(),
                 Title = token["title"].Value<string>().AsUTF8(),
                 URL = token["url"].Value<string>(),

@@ -21,7 +21,7 @@
                         Drop="AudioItem_Drop"  
                         DragEnter="AudioItem_DragEnter"
                         OnDrag="{Binding OnDrag, ElementName=this}"
-                        CanReorder="{Binding CanReorder, ElementName=this}"                                 
+                        CanReorder="{Binding CanReorder, ElementName=this}"                            
                         Opacity="{Binding IsDropPreview, Converter={StaticResource DragConv}}"
                         />
         </DataTemplate>

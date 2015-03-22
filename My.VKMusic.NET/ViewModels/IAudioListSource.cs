@@ -13,5 +13,7 @@ namespace My.VKMusic.ViewModels
         void Load();
         void Shuffle();
 
+
+        void Reorder(AudioFileInfo audioFileInfo1, AudioFileInfo audioFileInfo2, AudioFileInfo audioFileInfo3);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using My.VKMusic.Tools;
+using My.VKMusic.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -96,10 +97,10 @@ namespace My.VKMusic.Views.DragManagement
                 {
                     var list = dragItem.List;
                     int index = list.IndexOf(dragItem);
-                    var audio = new AudioFileInfo(); //@todo
-                    var before = index > 0 ? new AudioFileInfo() : null; //@todo
-                    var after = index < list.Count - 1 ? new AudioFileInfo() : null; //@todo
-                    Reorder.Invoke(this, new AudioReorderEventArgs(audio, before, after)); //@todo
+                    var audio = (list[index] as AudioFile).Info;
+                    var before = index < list.Count - 1 ? (list[index + 1] as AudioFile).Info : null;
+                    var after = index > 0 ? (list[index - 1] as AudioFile).Info : null; 
+                    Reorder.Invoke(this, new AudioReorderEventArgs(audio, before, after)); 
                 }
 
                 _dragdropWindow.Close();

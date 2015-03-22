@@ -43,5 +43,13 @@ namespace My.VKMusic.ViewModels
             if (files != null)
                 files.Shuffle();
         }
+
+
+        public void Reorder(AudioFileInfo audio, AudioFileInfo before, AudioFileInfo after)
+        {
+            long? before_id = before == null ? null : (long?)before.Id;
+            long? after_id = after == null ? null : (long?)after.Id;
+            api.AudioReorder(audio.Id, audio.OwnerId, before_id, after_id);
+        }
     }
 }
