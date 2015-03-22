@@ -18,12 +18,14 @@
                   Background="WhiteSmoke" Visibility="{Binding IsLoading, ElementName=this, Converter={StaticResource Vis}}">
                 <Label Content="Loading..." HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"/>
             </Grid>
-            <ItemsControl DataContext="{Binding}" ItemsSource="{Binding}" 
+            <ListBox DataContext="{Binding}" ItemsSource="{Binding}" 
                           AllowDrop="True" 
                           Drop="AudioItem_Drop"
                           DragEnter="AudioItem_DragEnter"
-                          DragLeave="ItemsControl_DragLeave">
-                <ItemsControl.ItemTemplate>
+                          DragLeave="ItemsControl_DragLeave"
+                          VirtualizingStackPanel.IsVirtualizing="True"
+                          VirtualizingStackPanel.VirtualizationMode="Recycling">
+                <ListBox.ItemTemplate>
                     <DataTemplate>
                         <v:AudioItem DataContext="{Binding}"
                                      PlayAudioCommand="{Binding PlayAudioCommand, ElementName=this}"
@@ -37,9 +39,9 @@
                                      Opacity="{Binding IsDropPreview, Converter={StaticResource DragConv}}"
                                      />
                     </DataTemplate>
-                </ItemsControl.ItemTemplate>
+                </ListBox.ItemTemplate>
        
-            </ItemsControl>
+            </ListBox>
         </DockPanel>
     </ScrollViewer>
 </UserControl>

@@ -158,20 +158,32 @@ namespace My.VKMusic.Views
                 BackgroundWorker loader = new BackgroundWorker();
                 loader.DoWork += (args2, e2) =>
                 {
-                    //Thread.Sleep(1000);//@test
-                };
-                loader.RunWorkerCompleted += (args2, e2) =>
-                {
+                    List<AudioFileInfo> infos = new List<AudioFileInfo>();
                     for (int i = position; i < position + loadCount; i++)
                     {
                         if (i >= totalItemsCount) break;
                         AudioFileInfo info = audioSource.AudioItems[i];
-                        AudioFile file = new AudioFile(info);
-                        this.Items.Add(file);
+                        infos.Add(info);
                     }
                     position += loadCount;
                     if (position >= totalItemsCount)
                         position = totalItemsCount;
+                    e2.Result = infos;
+                };
+                loader.RunWorkerCompleted += (args2, e2) =>
+                {
+                    List<AudioFileInfo> infos = e2.Result as List<AudioFileInfo>;
+                    this.Dispatcher.Invoke((Action)(() =>
+                    {
+                        var items = this.Items;
+                        this.Items = null;
+                        foreach (var info in infos)
+                        {
+                            AudioFile file = new AudioFile(info);
+                            items.Add(file);
+                        }
+                        this.Items = items;
+                    }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
                     IsLoading = false;
                     if (callback != null)
                         callback.Invoke();
