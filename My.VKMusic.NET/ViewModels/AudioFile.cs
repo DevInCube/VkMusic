@@ -1,4 +1,5 @@
 ﻿using My.VKMusic.Models;
+using My.VKMusic.Views.DragManagement;
 using NAudio.Wave;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ using VkNET.Models;
 
 namespace My.VKMusic.ViewModels
 {
-    public class AudioFile : ObservableObject
+    public class AudioFile : ADragVM
     {
 
         private AudioFileInfo info;
@@ -34,12 +35,25 @@ namespace My.VKMusic.ViewModels
         public AudioFile(AudioFileInfo info)
         {
             this.info = info;
-            reader = new AudioFileReader(this.info.URL);
+            if (this.info.URL != null)
+                reader = new AudioFileReader(this.info.URL);
         }
 
         public AudioFileReader GetReader()
         {
             return reader;
+        }
+
+        public override object Clone()
+        {
+            return new AudioFile(info);
+        }
+
+        public override bool Equals(ADragVM other)
+        {
+            if (this == other) return true;
+            AudioFile af = other as AudioFile;
+            return af.info.Equals(this.info);
         }
     }
 }

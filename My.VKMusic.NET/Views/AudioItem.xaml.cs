@@ -1,4 +1,5 @@
 ﻿using My.VKMusic.ViewModels;
+using My.VKMusic.Views.DragManagement;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -165,14 +166,14 @@ namespace My.VKMusic.Views
 
         void item_MouseLeave(object sender, MouseEventArgs e)
         {
-            var context = this.DataContext as DragTestItem2;
+            var context = this.DataContext as ADragVM;
             context.IsMouseHover = false;
             item.Background = context.IsSelected ? currentColor : Brushes.WhiteSmoke;
         }
 
         void item_MouseEnter(object sender, MouseEventArgs e)
         {
-            var context = this.DataContext as DragTestItem2;
+            var context = this.DataContext as ADragVM;
             context.IsMouseHover = true;
             item.Background = context.IsSelected ? currentColor : hoverColor;
         }

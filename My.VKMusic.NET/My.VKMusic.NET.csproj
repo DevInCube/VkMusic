@@ -68,6 +68,7 @@
     <Compile Include="Models\AudioPlayer.cs" />
     <Compile Include="Tools\CursorHelper.cs" />
     <Compile Include="ViewModels\AudioFile.cs" />
+    <Compile Include="ViewModels\IAudioListSource.cs" />
     <Compile Include="ViewModels\ObservableObject.cs" />
     <Compile Include="ViewModels\RelayCommand.cs" />
     <Compile Include="ViewModels\SimpleCommand.cs" />

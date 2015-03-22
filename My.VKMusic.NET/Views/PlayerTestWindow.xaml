@@ -5,6 +5,11 @@
         x:Name="this"
         Title="PlayerTestWindow" Height="300" Width="300">
     <Grid>
+        <DockPanel>
+            <Grid DockPanel.Dock="Top" Background="WhiteSmoke">
+                <CheckBox IsChecked="{Binding Shuffle}" Content="Shuffle" Margin="5"></CheckBox>
+            </Grid>
+        
         <v:AudioListControl DataContext="{Binding Items}"
                             CanReorder ="{Binding CanReorder, ElementName=this}"
                             PlayAudioCommand ="{Binding DataContext.PlayAudioCommand, ElementName=this}"
@@ -15,5 +20,6 @@
                             ScrollCommand="{Binding DataContext.ScrollCommand, ElementName=this}"
                             IsLoading="{Binding DataContext.IsLoading, ElementName=this, Mode=TwoWay}"
                             />
+        </DockPanel>
     </Grid>
 </Window>

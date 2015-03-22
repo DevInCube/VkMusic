@@ -17,6 +17,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using VkNET.Models;
+using VkNET.Extensions;
 
 namespace My.VKMusic.Views
 {
@@ -26,13 +28,28 @@ namespace My.VKMusic.Views
     public partial class PlayerTestWindow : Window, INotifyPropertyChanged
     {
 
-        private bool _LoadingStarted;
-        private List<DragTestItem2> TestSourceItems = new List<DragTestItem2>();
+        public const double SCROLL_LOAD_KOEF = 1.0D;
+
+        private bool _LoadingStarted, _Shuffle;
+        private IAudioListSource audioSource = new TestAudioSource();       
         private int position = 0;
         private int loadCount = 10;
+        private AudioFile currentAudio = null;
 
         public DragManager DragManager { get; set; }
         public bool CanReorder { get; set; }
+        public bool Shuffle {
+            get { return _Shuffle; }
+            set
+            {
+                _Shuffle = value;
+                if (_Shuffle)
+                    audioSource.Shuffle();
+                else
+                    audioSource.Load();
+                ReloadItems();
+            }
+        }
         public ObservableCollection<ADragVM> Items { get; set; }
         public MouseButtonEventHandler OnDrag { get; set; }
         public ICommand PlayAudioCommand { get; set; }
@@ -40,7 +57,8 @@ namespace My.VKMusic.Views
         public ICommand DeleteAudioCommand { get; set; }
         public ICommand ScrollCommand { get; set; }
 
-        public bool IsLoading { 
+        public bool IsLoading 
+        { 
             get { return _LoadingStarted; }
             set { _LoadingStarted = value; OnPropertyChanged("IsLoading"); }
         }
@@ -56,7 +74,11 @@ namespace My.VKMusic.Views
             DragManager.Reorder += DragManager_Reorder;
             this.OnDrag = (MouseButtonEventHandler)((sender, e) => { DragManager.OnDragStart(sender); });
             this.PlayAudioCommand = new RelayCommand((o) => {
-                (o as DragTestItem2).IsPlaying = !(o as DragTestItem2).IsPlaying;
+                if (currentAudio != null) 
+                    currentAudio.IsPlaying = false; //@todo
+                var newAudio = (o as AudioFile);
+                newAudio.IsPlaying = !newAudio.IsPlaying;//@todo
+                currentAudio = newAudio;
             });
             this.EditAudioCommand = new RelayCommand((o) =>
             {
@@ -64,7 +86,7 @@ namespace My.VKMusic.Views
             });
             this.DeleteAudioCommand = new RelayCommand((o) =>
             {
-                var item = (o as DragTestItem2);
+                var item = (o as ADragVM);
                 item.List.Remove(item);
             });
             ScrollCommand = new RelayCommand((args) =>
@@ -73,36 +95,28 @@ namespace My.VKMusic.Views
                 ScrollViewer sb = e.OriginalSource as ScrollViewer;
                 double offset = sb.VerticalOffset;
                 double maximum = sb.ScrollableHeight;
-                if (offset == maximum)
+                if (offset == maximum * SCROLL_LOAD_KOEF)
                 {
                     LoadItems();
                 }
             });
             this.DataContext = this;
 
-            this.TestSourceItems.Add(new DragTestItem2("Muse", "Resistance"));
-            this.TestSourceItems.Add(new DragTestItem2("Nickelback", "op"));
-            this.TestSourceItems.Add(new DragTestItem2("Tool", "Tool"));
-            this.TestSourceItems.Add(new DragTestItem2("Muse", "Uprising"));
-            this.TestSourceItems.Add(new DragTestItem2("Muse", "Test"));
-            this.TestSourceItems.Add(new DragTestItem2("Test", "test"));
-            this.TestSourceItems.Add(new DragTestItem2("Me", "Ok"));
-            this.TestSourceItems.Add(new DragTestItem2("Me", "NotOk"));
-            this.TestSourceItems.Add(new DragTestItem2("Me", "KukuOk"));
-            this.TestSourceItems.Add(new DragTestItem2("Me", "QwertyOk"));
-            this.TestSourceItems.Add(new DragTestItem2("Blablablaadasdasdasdasd", "asdasdasd"));
-            this.TestSourceItems.Add(new DragTestItem2("New1", "new"));
-            this.TestSourceItems.Add(new DragTestItem2("New2", "new"));
-            this.TestSourceItems.Add(new DragTestItem2("New3", "new"));
-            this.TestSourceItems.Add(new DragTestItem2("New4", "new"));
-            this.TestSourceItems.Add(new DragTestItem2("New5", "new"));
+            audioSource.Load();                        
 
             this.Loaded += PlayerTestWindow_Loaded;
         }
 
+        void ReloadItems()
+        {
+            this.Items.Clear();
+            position = 0;
+            LoadItems();
+        }
+
         void LoadItems()
         {
-            int totalItemsCount = TestSourceItems.Count;
+            int totalItemsCount = audioSource.AudioItems.Count;
             if (!IsLoading && position < totalItemsCount)
             {
                 IsLoading = true;
@@ -114,8 +128,12 @@ namespace My.VKMusic.Views
                 loader.RunWorkerCompleted += (args2, e2) =>
                 {
                     for (int i = position; i < position + loadCount; i++)
+                    {
                         if (i >= totalItemsCount) break;
-                        else this.Items.Add(TestSourceItems[i]);
+                        AudioFileInfo info = audioSource.AudioItems[i];
+                        AudioFile file = new AudioFile(info);
+                        this.Items.Add(file);
+                    }
                     position += loadCount;
                     if (position >= totalItemsCount)
                         position = totalItemsCount;
@@ -157,5 +175,47 @@ namespace My.VKMusic.Views
 
         #endregion
 
+    }
+
+    class TestAudioSource : IAudioListSource
+    {
+
+        private List<AudioFileInfo> files = new List<AudioFileInfo>()
+        {
+            new AudioFileInfo(){Artist = "Test", Title="test"},
+            new AudioFileInfo(){Artist = "Test1", Title="test"},
+            new AudioFileInfo(){Artist = "Test2", Title="test"},
+            new AudioFileInfo(){Artist = "Test3", Title="test"},
+            new AudioFileInfo(){Artist = "Test4", Title="test"},
+            new AudioFileInfo(){Artist = "Test6", Title="test"},
+            new AudioFileInfo(){Artist = "Test5", Title="test"},
+            new AudioFileInfo(){Artist = "Test6", Title="test"},
+            new AudioFileInfo(){Artist = "Test21", Title="test"},
+            new AudioFileInfo(){Artist = "Test22", Title="test"},
+            new AudioFileInfo(){Artist = "Test23", Title="test"},
+            new AudioFileInfo(){Artist = "Test24", Title="test"},
+            new AudioFileInfo(){Artist = "Test25", Title="test"},
+            new AudioFileInfo(){Artist = "Test26", Title="test"},
+            new AudioFileInfo(){Artist = "Test27", Title="test"},
+            new AudioFileInfo(){Artist = "Test28", Title="test"},
+        };
+
+        private List<AudioFileInfo> items;
+
+        public IList<VkNET.Models.AudioFileInfo> AudioItems
+        {
+            get { return items; }
+        }
+
+        public void Load()
+        {
+            items = new List<AudioFileInfo>(files);
+        }
+
+        public void Shuffle()
+        {
+            items = new List<AudioFileInfo>(files);
+            items.Shuffle();
+        }
     }
 }
