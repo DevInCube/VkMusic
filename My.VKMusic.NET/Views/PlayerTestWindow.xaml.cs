@@ -26,7 +26,10 @@ namespace My.VKMusic.Views
     public partial class PlayerTestWindow : Window, INotifyPropertyChanged
     {
 
-        private bool _LoadingStarted = true;
+        private bool _LoadingStarted;
+        private List<DragTestItem2> TestSourceItems = new List<DragTestItem2>();
+        private int position = 0;
+        private int loadCount = 10;
 
         public DragManager DragManager { get; set; }
         public bool CanReorder { get; set; }
@@ -72,44 +75,59 @@ namespace My.VKMusic.Views
                 double maximum = sb.ScrollableHeight;
                 if (offset == maximum)
                 {
-                    if (!IsLoading)
-                    {
-                        IsLoading = true;
-                        BackgroundWorker loader = new BackgroundWorker();
-                        loader.DoWork += (args2, e2) => {
-                            Thread.Sleep(1000);
-                        };
-                        loader.RunWorkerCompleted += (args2, e2) => {
-                            Items.Add(new DragTestItem2("New1", "new"));
-                            Items.Add(new DragTestItem2("New2", "new"));
-                            Items.Add(new DragTestItem2("New3", "new"));
-                            Items.Add(new DragTestItem2("New4", "new"));
-                            Items.Add(new DragTestItem2("New5", "new"));
-                            IsLoading = false;
-                        };
-                        loader.RunWorkerAsync();
-                    }
+                    LoadItems();
                 }
             });
             this.DataContext = this;
 
+            this.TestSourceItems.Add(new DragTestItem2("Muse", "Resistance"));
+            this.TestSourceItems.Add(new DragTestItem2("Nickelback", "op"));
+            this.TestSourceItems.Add(new DragTestItem2("Tool", "Tool"));
+            this.TestSourceItems.Add(new DragTestItem2("Muse", "Uprising"));
+            this.TestSourceItems.Add(new DragTestItem2("Muse", "Test"));
+            this.TestSourceItems.Add(new DragTestItem2("Test", "test"));
+            this.TestSourceItems.Add(new DragTestItem2("Me", "Ok"));
+            this.TestSourceItems.Add(new DragTestItem2("Me", "NotOk"));
+            this.TestSourceItems.Add(new DragTestItem2("Me", "KukuOk"));
+            this.TestSourceItems.Add(new DragTestItem2("Me", "QwertyOk"));
+            this.TestSourceItems.Add(new DragTestItem2("Blablablaadasdasdasdasd", "asdasdasd"));
+            this.TestSourceItems.Add(new DragTestItem2("New1", "new"));
+            this.TestSourceItems.Add(new DragTestItem2("New2", "new"));
+            this.TestSourceItems.Add(new DragTestItem2("New3", "new"));
+            this.TestSourceItems.Add(new DragTestItem2("New4", "new"));
+            this.TestSourceItems.Add(new DragTestItem2("New5", "new"));
+
             this.Loaded += PlayerTestWindow_Loaded;
+        }
+
+        void LoadItems()
+        {
+            int totalItemsCount = TestSourceItems.Count;
+            if (!IsLoading && position < totalItemsCount)
+            {
+                IsLoading = true;
+                BackgroundWorker loader = new BackgroundWorker();
+                loader.DoWork += (args2, e2) =>
+                {
+                    Thread.Sleep(1000);
+                };
+                loader.RunWorkerCompleted += (args2, e2) =>
+                {
+                    for (int i = position; i < position + loadCount; i++)
+                        if (i >= totalItemsCount) break;
+                        else this.Items.Add(TestSourceItems[i]);
+                    position += loadCount;
+                    if (position >= totalItemsCount)
+                        position = totalItemsCount;
+                    IsLoading = false;
+                };
+                loader.RunWorkerAsync();
+            }
         }
 
         void PlayerTestWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            this.Items.Add(new DragTestItem2("Muse", "Resistance"));
-            this.Items.Add(new DragTestItem2("Nickelback", "op"));
-            this.Items.Add(new DragTestItem2("Tool", "Tool"));
-            this.Items.Add(new DragTestItem2("Muse", "Uprising"));
-            this.Items.Add(new DragTestItem2("Muse", "Test"));
-            this.Items.Add(new DragTestItem2("Test", "test"));
-            this.Items.Add(new DragTestItem2("Me", "Ok"));
-            this.Items.Add(new DragTestItem2("Me", "NotOk"));
-            this.Items.Add(new DragTestItem2("Me", "KukuOk"));
-            this.Items.Add(new DragTestItem2("Me", "QwertyOk"));
-            this.Items.Add(new DragTestItem2("Blablablaadasdasdasdasd", "asdasdasd"));
-            IsLoading = false;
+            LoadItems();
         }
 
         void DragManager_Reorder(object sender, AudioReorderEventArgs e)
