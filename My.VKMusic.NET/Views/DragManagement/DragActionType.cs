@@ -8,7 +8,8 @@ namespace My.VKMusic.Views.DragManagement
 {
     public enum DragActionType
     {
-        Reorder = 0,
+        None = 0,
+        Reorder,
         Move,
         Copy
     }

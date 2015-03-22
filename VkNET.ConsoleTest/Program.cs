@@ -1,6 +1,7 @@
 ﻿using My.VkMusic.Core;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -22,6 +23,11 @@ namespace VkNET.ConsoleTest
             vk.DoAuth(() =>
             {
                 Console.WriteLine("Auth OK");
+                Stopwatch sw = new Stopwatch();
+                sw.Start();
+                vk.AudioGet();
+                sw.Stop();
+                Console.WriteLine(sw.ElapsedMilliseconds);
                 //vk.AudioGetAlbums().ForEach(a => Console.WriteLine(a));
                 //vk.AudioDeleteAlbum(1111);
                 //vk.AudioReorder(123, 123, 15, null);

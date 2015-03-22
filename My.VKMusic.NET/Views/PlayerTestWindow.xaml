@@ -6,10 +6,14 @@
         Title="PlayerTestWindow" Height="300" Width="300">
     <Grid>
         <v:AudioListControl DataContext="{Binding Items}"
+                            CanReorder ="{Binding CanReorder, ElementName=this}"
                             PlayAudioCommand ="{Binding DataContext.PlayAudioCommand, ElementName=this}"
                             EditAudioCommand ="{Binding DataContext.EditAudioCommand, ElementName=this}"
                             DeleteAudioCommand ="{Binding DataContext.DeleteAudioCommand, ElementName=this}"
                             DragManager="{Binding DataContext.DragManager, ElementName=this}"
-                            OnDrag="{Binding DataContext.OnDrag, ElementName=this}"/>
+                            OnDrag="{Binding DataContext.OnDrag, ElementName=this}"
+                            ScrollCommand="{Binding DataContext.ScrollCommand, ElementName=this}"
+                            IsLoading="{Binding DataContext.IsLoading, ElementName=this, Mode=TwoWay}"
+                            />
     </Grid>
 </Window>

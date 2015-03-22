@@ -260,5 +260,6 @@ namespace My.VKMusic.Views.DragManagement
             this._dragdropWindow.Left = w32Mouse.X - _dragdropWindow.ActualWidth - 10;
             this._dragdropWindow.Top = w32Mouse.Y + 10;
         }
+
     }
 }

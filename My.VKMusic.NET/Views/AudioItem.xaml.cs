@@ -79,6 +79,20 @@ namespace My.VKMusic.Views
             (d as AudioItem).DeleteAudioCommand = e.NewValue as ICommand;
         }
 
+        public bool CanReorder
+        {
+            get { return (bool)this.GetValue(CanReorderProperty); }
+            set { this.SetValue(CanReorderProperty, value); }
+        }
+
+        public static readonly DependencyProperty CanReorderProperty = DependencyProperty.Register(
+          "CanReorder", typeof(bool), typeof(AudioItem), new PropertyMetadata(true, CanReorderChanged));
+
+        private static void CanReorderChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            (d as AudioItem).CanReorder = bool.Parse(e.NewValue.ToString());            
+        }
+
         Brush artistFG = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#2B587A"));
         Brush currentColor = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#45668e"));
         Brush hoverColor = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#E1E7ED"));

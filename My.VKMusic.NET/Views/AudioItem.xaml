@@ -21,10 +21,14 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <Button Content="I&gt;" Width="26" Command="{Binding PlayAudioCommand, ElementName=this}" CommandParameter="{Binding}"
-                    Visibility="{Binding IsPlaying, Converter={StaticResource Vis}, ConverterParameter=true}"/>
-            <Button Content="I I" Width="26" Command="{Binding PlayAudioCommand, ElementName=this}" CommandParameter="{Binding}"
-                    Visibility="{Binding IsPlaying, Converter={StaticResource Vis}, ConverterParameter=false}"/>
+            <Button Content="I&gt;" Width="26" BorderThickness="0" FontWeight="Bold"
+                    Command="{Binding PlayAudioCommand, ElementName=this}" CommandParameter="{Binding}"
+                    Visibility="{Binding IsPlaying, Converter={StaticResource Vis}, ConverterParameter=true}"
+                    Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"/>
+            <Button Content="I I" Width="26" BorderThickness="0" FontWeight="Bold"
+                    Command="{Binding PlayAudioCommand, ElementName=this}" CommandParameter="{Binding}"
+                    Visibility="{Binding IsPlaying, Converter={StaticResource Vis}, ConverterParameter=false}"
+                     Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" />
             <Label x:Name="artistLabel" Content="{Binding Info.Artist, FallbackValue=Artist}" Grid.Column="1" FontWeight="Bold" Foreground="#2B587A"></Label>
             <Label x:Name="divLabel" Content="-" Grid.Column="2"></Label>
             <Label x:Name="titleLabel" Content="{Binding Info.Title,FallbackValue=Title}" Grid.Column="3"></Label>
@@ -32,7 +36,8 @@
                    Visibility="{Binding IsMouseHover, Converter={StaticResource Vis}, ConverterParameter=true}"></Label>
             <StackPanel Grid.Column="5" Orientation="Horizontal"
                 Visibility="{Binding IsMouseHover, Converter={StaticResource Vis}, ConverterParameter=false}">                
-                <Label x:Name="drag" Tag="{Binding ElementName=item}" Content="..." Height="Auto" VerticalContentAlignment="Center" PreviewMouseLeftButtonDown="AudioItem_PreviewMouseLeftButtonDown"/>
+                <Label x:Name="drag" Tag="{Binding ElementName=item}" Content="..." Height="Auto" VerticalContentAlignment="Center" PreviewMouseLeftButtonDown="AudioItem_PreviewMouseLeftButtonDown"
+                        Visibility="{Binding CanReorder, ElementName=this, Converter={StaticResource Vis}}"/>
                 <Button Content="E"  Height="26" Width="26" FontWeight="Bold" BorderThickness="0"  
                         Command="{Binding EditAudioCommand, ElementName=this}" CommandParameter="{Binding}"
                     Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"/>

@@ -78,6 +78,34 @@ namespace My.VKMusic.Views
             (d as AudioListControl).EditAudioCommand = e.NewValue as ICommand;
         }
 
+        public ICommand ScrollCommand
+        {
+            get { return (ICommand)this.GetValue(ScrollCommandProperty); }
+            set { this.SetValue(ScrollCommandProperty, value); }
+        }
+
+        public static readonly DependencyProperty ScrollCommandProperty = DependencyProperty.Register(
+          "ScrollCommand", typeof(ICommand), typeof(AudioListControl), new PropertyMetadata(null, ScrollCommandchanged));
+
+        private static void ScrollCommandchanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            (d as AudioListControl).ScrollCommand = e.NewValue as ICommand;
+        }
+
+        public bool CanReorder
+        {
+            get { return (bool)this.GetValue(CanReorderProperty); }
+            set { this.SetValue(CanReorderProperty, value); }
+        }
+
+        public static readonly DependencyProperty CanReorderProperty = DependencyProperty.Register(
+          "CanReorder", typeof(bool), typeof(AudioListControl), new PropertyMetadata(true, CanReorderChanged));
+
+        private static void CanReorderChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            (d as AudioListControl).CanReorder = bool.Parse(e.NewValue.ToString());
+        }
+
         public ICommand DeleteAudioCommand
         {
             get { return (ICommand)this.GetValue(DeleteAudioCommandProperty); }
@@ -92,6 +120,19 @@ namespace My.VKMusic.Views
             (d as AudioListControl).DeleteAudioCommand = e.NewValue as ICommand;
         }
 
+        public bool IsLoading
+        {
+            get { return (bool)this.GetValue(IsLoadingProperty); }
+            set { this.SetValue(IsLoadingProperty, value); }
+        }
+
+        public static readonly DependencyProperty IsLoadingProperty = DependencyProperty.Register(
+          "IsLoading", typeof(bool), typeof(AudioListControl), new PropertyMetadata(false, IsLoadingchanged));
+
+        private static void IsLoadingchanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            (d as AudioListControl).IsLoading = bool.Parse(e.NewValue.ToString());
+        }
 
         public AudioListControl()
         {
@@ -111,6 +152,12 @@ namespace My.VKMusic.Views
         private void ItemsControl_DragLeave(object sender, DragEventArgs e)
         {
             this.DragManager.OnDragLeave(sender, e);
+        }
+
+        private void ScrollViewer_ScrollChanged(object sender, ScrollChangedEventArgs e)
+        {
+            if (ScrollCommand != null)
+                ScrollCommand.Execute(e);
         }
 
 

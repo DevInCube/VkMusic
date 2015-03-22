@@ -12,26 +12,34 @@
         <conv:VisibilityConverter x:Key="Vis"/>
         <conv:DragConverter x:Key="DragConv"/>
     </UserControl.Resources>
-    <ScrollViewer VerticalScrollBarVisibility="Auto">
-        <ItemsControl DataContext="{Binding}" ItemsSource="{Binding}" 
-                      AllowDrop="True" 
-                      Drop="AudioItem_Drop"
-                      DragEnter="AudioItem_DragEnter"
-                      DragLeave="ItemsControl_DragLeave">
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <v:AudioItem DataContext="{Binding}"
-                                 PlayAudioCommand="{Binding PlayAudioCommand, ElementName=this}"
-                                 EditAudioCommand="{Binding EditAudioCommand, ElementName=this}"
-                                 DeleteAudioCommand="{Binding DeleteAudioCommand, ElementName=this}"
-                                 AllowDrop="True"                                 
-                                 Drop="AudioItem_Drop"  
-                                 DragEnter="AudioItem_DragEnter"
-                                 OnDrag="{Binding OnDrag, ElementName=this}"
-                                 Opacity="{Binding IsDropPreview, Converter={StaticResource DragConv}}"
-                                 />
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
+    <ScrollViewer VerticalScrollBarVisibility="Auto" ScrollChanged="ScrollViewer_ScrollChanged" >
+        <DockPanel>
+            <Grid DockPanel.Dock="Bottom"  Height="50"
+                  Background="WhiteSmoke" Visibility="{Binding IsLoading, ElementName=this, Converter={StaticResource Vis}}">
+                <Label Content="Loading..." HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"/>
+            </Grid>
+            <ItemsControl DataContext="{Binding}" ItemsSource="{Binding}" 
+                          AllowDrop="True" 
+                          Drop="AudioItem_Drop"
+                          DragEnter="AudioItem_DragEnter"
+                          DragLeave="ItemsControl_DragLeave">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <v:AudioItem DataContext="{Binding}"
+                                     PlayAudioCommand="{Binding PlayAudioCommand, ElementName=this}"
+                                     EditAudioCommand="{Binding EditAudioCommand, ElementName=this}"
+                                     DeleteAudioCommand="{Binding DeleteAudioCommand, ElementName=this}"
+                                     AllowDrop="True"                                 
+                                     Drop="AudioItem_Drop"  
+                                     DragEnter="AudioItem_DragEnter"
+                                     OnDrag="{Binding OnDrag, ElementName=this}"
+                                     CanReorder="{Binding CanReorder, ElementName=this}"                                 
+                                     Opacity="{Binding IsDropPreview, Converter={StaticResource DragConv}}"
+                                     />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+       
+            </ItemsControl>
+        </DockPanel>
     </ScrollViewer>
 </UserControl>
