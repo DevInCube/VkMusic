@@ -57,5 +57,7 @@ namespace My.VKMusic.ViewModels
         {
             api.AudioDelete(audioFileInfo.Id, audioFileInfo.OwnerId);
         }
+
+      
     }
 }

@@ -59,6 +59,9 @@ namespace My.VKMusic.Views
         public ObservableCollection<ADragVM> Items { get; set; }
         public MouseButtonEventHandler OnDrag { get; set; }
         public ICommand PlayAudioCommand { get; set; }
+        public ICommand StopCommand { get; set; }
+        public ICommand PrevCommand { get; set; }
+        public ICommand NextCommand { get; set; }
         public ICommand EditAudioCommand { get; set; }
         public ICommand DeleteAudioCommand { get; set; }
         public ICommand ScrollCommand { get; set; }
@@ -80,23 +83,21 @@ namespace My.VKMusic.Views
             DragManager.Reorder += DragManager_Reorder;
             this.OnDrag = (MouseButtonEventHandler)((sender, e) => { DragManager.OnDragStart(sender); });
             this.PlayAudioCommand = new RelayCommand((o) => {
-                var newAudio = (o as AudioFile);
-                if (CurrentAudio != null && CurrentAudio!=newAudio)
-                {
-                    Player.Stop();
-                    CurrentAudio.IsPlaying = false;
-                }  
-                SetCurrentAudio(newAudio);              
-                if (newAudio.IsPlaying)
-                {
-                    Player.Pause();
-                }
-                else
-                {
-                    Player.Play();
-                }
-                //newAudio.IsPlaying = !newAudio.IsPlaying;//@todo
-                               
+                PlayAudio(o as AudioFile);                               
+            });
+            this.StopCommand = new RelayCommand((o) =>
+            {
+                Player.Stop();
+                Player.Position = 0;
+            });
+            this.PrevCommand = new RelayCommand((o) =>
+            {
+                PlayAudio(GetPrevAudio());
+            });
+            this.NextCommand = new RelayCommand((o) =>
+            {
+                PlayAudio(GetNextAudio());
+ 
             });
             this.EditAudioCommand = new RelayCommand((o) =>
             {
@@ -123,6 +124,39 @@ namespace My.VKMusic.Views
             this.DataContext = this;            
 
             this.Loaded += PlayerTestWindow_Loaded;
+        }
+
+        private void PlayAudio(AudioFile newAudio)
+        {
+            if (CurrentAudio != null && CurrentAudio != newAudio)
+            {
+                Player.Stop();
+                CurrentAudio.IsPlaying = false;
+            }
+            SetCurrentAudio(newAudio);
+            if (newAudio.IsPlaying)
+            {
+                Player.Pause();
+            }
+            else
+            {
+                Player.Play();
+            }
+            //newAudio.IsPlaying = !newAudio.IsPlaying;//@todo
+        }
+
+        public AudioFile GetPrevAudio()
+        {
+            int pos = this.Items.IndexOf(CurrentAudio) - 1;
+            if (pos < 0) pos = this.Items.Count - 1;
+            return this.Items[pos] as AudioFile;
+        }
+
+        public AudioFile GetNextAudio()
+        {
+            int pos = this.Items.IndexOf(CurrentAudio) + 1;
+            pos %= this.Items.Count;
+            return this.Items[pos] as AudioFile;
         }
 
         private void SetCurrentAudio(AudioFile newAudio)
@@ -223,57 +257,5 @@ namespace My.VKMusic.Views
 
     }
 
-    class TestAudioSource : IAudioListSource
-    {
-
-        private List<AudioFileInfo> files = new List<AudioFileInfo>()
-        {
-            new AudioFileInfo(){Artist = "Test", Title="test"},
-            new AudioFileInfo(){Artist = "Test1", Title="test"},
-            new AudioFileInfo(){Artist = "Test2", Title="test"},
-            new AudioFileInfo(){Artist = "Test3", Title="test"},
-            new AudioFileInfo(){Artist = "Test4", Title="test"},
-            new AudioFileInfo(){Artist = "Test6", Title="test"},
-            new AudioFileInfo(){Artist = "Test5", Title="test"},
-            new AudioFileInfo(){Artist = "Test6", Title="test"},
-            new AudioFileInfo(){Artist = "Test21", Title="test"},
-            new AudioFileInfo(){Artist = "Test22", Title="test"},
-            new AudioFileInfo(){Artist = "Test23", Title="test"},
-            new AudioFileInfo(){Artist = "Test24", Title="test"},
-            new AudioFileInfo(){Artist = "Test25", Title="test"},
-            new AudioFileInfo(){Artist = "Test26", Title="test"},
-            new AudioFileInfo(){Artist = "Test27", Title="test"},
-            new AudioFileInfo(){Artist = "Test28", Title="test"},
-        };
-
-        private List<AudioFileInfo> items;
-
-        public IList<VkNET.Models.AudioFileInfo> AudioItems
-        {
-            get { return items; }
-        }
-
-        public void Load()
-        {
-            items = new List<AudioFileInfo>(files);
-        }
-
-        public void Shuffle()
-        {
-            items = new List<AudioFileInfo>(files);
-            items.Shuffle();
-        }
-
-
-        public void Reorder(AudioFileInfo audioFileInfo1, AudioFileInfo audioFileInfo2, AudioFileInfo audioFileInfo3)
-        {
-            //throw new NotImplementedException();
-        }
-
-
-        public void Delete(AudioFileInfo audioFileInfo)
-        {
-            files.Remove(audioFileInfo);
-        }
-    }
+    
 }

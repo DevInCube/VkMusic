@@ -4,9 +4,10 @@
         xmlns:v="clr-namespace:My.VKMusic.Views" 
         xmlns:conv="clr-namespace:My.VKMusic.Views.Converters" 
         x:Name="this"
-        Title="PlayerTestWindow" Height="400" Width="485">
+        Title="VkMusic" Height="400" Width="485">
     <Window.Resources>
         <conv:TimeSpanConverter x:Key="TSConv"/>
+        <conv:VisibilityConverter x:Key="Vis"/>
         
         <Style x:Key="SliderRepeatButton" TargetType="RepeatButton">
             <Setter Property="SnapsToDevicePixels" Value="true" />
@@ -86,6 +87,19 @@
             <Grid DockPanel.Dock="Top" Background="#E1E7ED" >
                 <StackPanel >
                     <v:CurrentAudioControl DataContext="{Binding CurrentAudio}"/>
+                    <StackPanel Orientation="Horizontal" Margin="10,-5,10,0">
+                        <Button Content="&lt;&lt;" Command="{Binding PrevCommand}" Height="26" Width="26" Foreground="#2B587A" FontWeight="Bold" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"/>
+                        <Button Content="I&gt;" Width="26" Height="26" BorderThickness="0" FontWeight="Bold" Foreground="#2B587A"
+                    Command="{Binding PlayAudioCommand}" CommandParameter="{Binding CurrentAudio}"
+                    Visibility="{Binding CurrentAudio.IsPlaying, Converter={StaticResource Vis}, ConverterParameter=true}"
+                    Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"/>
+                        <Button Content="I I" Width="26" Height="26" BorderThickness="0" FontWeight="Bold" Foreground="#2B587A"
+                    Command="{Binding PlayAudioCommand}" CommandParameter="{Binding CurrentAudio}"
+                    Visibility="{Binding CurrentAudio.IsPlaying, Converter={StaticResource Vis}, ConverterParameter=false, FallbackValue=Collapsed}"
+                     Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" />
+                        <Button Content="[_]" Command="{Binding StopCommand}" Height="26" Width="26" Foreground="#2B587A" FontWeight="Bold" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"/>
+                        <Button Content="&gt;&gt;" Command="{Binding NextCommand}" Height="26" Width="26" Foreground="#2B587A" FontWeight="Bold" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"/>
+                    </StackPanel>
                     <DockPanel LastChildFill="False">
                         <ToggleButton Style="{StaticResource {x:Static ToolBar.ToggleButtonStyleKey}}" IsChecked="{Binding Shuffle}" Content="Shuffle" Margin="10,0,10,0" VerticalAlignment="Center"></ToggleButton>
                         <Slider DockPanel.Dock="Right" Style="{StaticResource Horizontal_Slider}"

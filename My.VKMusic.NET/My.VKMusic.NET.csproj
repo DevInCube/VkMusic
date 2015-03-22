@@ -66,6 +66,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Models\AudioPlayer.cs" />
+    <Compile Include="Test\TestAudioSource.cs" />
     <Compile Include="Tools\CursorHelper.cs" />
     <Compile Include="ViewModels\AudioFile.cs" />
     <Compile Include="ViewModels\IAudioListSource.cs" />
