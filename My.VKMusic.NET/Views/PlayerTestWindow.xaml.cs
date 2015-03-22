@@ -173,17 +173,11 @@ namespace My.VKMusic.Views
                 loader.RunWorkerCompleted += (args2, e2) =>
                 {
                     List<AudioFileInfo> infos = e2.Result as List<AudioFileInfo>;
-                    this.Dispatcher.Invoke((Action)(() =>
+                    foreach (var info in infos)
                     {
-                        var items = this.Items;
-                        this.Items = null;
-                        foreach (var info in infos)
-                        {
-                            AudioFile file = new AudioFile(info);
-                            items.Add(file);
-                        }
-                        this.Items = items;
-                    }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
+                        AudioFile file = new AudioFile(info);
+                        this.Items.Add(file);
+                    }                    
                     IsLoading = false;
                     if (callback != null)
                         callback.Invoke();

@@ -36,12 +36,12 @@ namespace My.VKMusic.ViewModels
         public AudioFile(AudioFileInfo info)
         {
             this.info = info;
-            if (this.info.URL != null)
-                reader = new AudioFileReader(this.info.URL);
         }
 
         public AudioFileReader GetReader()
-        {            
+        {
+            if (this.info.URL != null && reader == null)
+                reader = new AudioFileReader(this.info.URL);
             return reader;
         }
 

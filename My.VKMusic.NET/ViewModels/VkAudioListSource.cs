@@ -34,7 +34,7 @@ namespace My.VKMusic.ViewModels
             if (loaded)
             {
                 int totalCount = 0;
-                files = api.AudioGet(position, loadCount, out totalCount);
+                files = api.AudioGet(null, null, out totalCount);
             }
         }
 
