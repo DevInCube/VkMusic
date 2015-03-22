@@ -15,5 +15,7 @@ namespace My.VKMusic.ViewModels
 
 
         void Reorder(AudioFileInfo audioFileInfo1, AudioFileInfo audioFileInfo2, AudioFileInfo audioFileInfo3);
+
+        void Delete(AudioFileInfo audioFileInfo);
     }
 }

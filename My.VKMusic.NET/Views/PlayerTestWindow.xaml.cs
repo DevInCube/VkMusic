@@ -106,6 +106,7 @@ namespace My.VKMusic.Views
             {
                 var item = (o as ADragVM);
                 item.List.Remove(item);
+                audioSource.Delete((item as AudioFile).Info);
             });
             ScrollCommand = new RelayCommand((args) =>
             {
@@ -267,6 +268,12 @@ namespace My.VKMusic.Views
         public void Reorder(AudioFileInfo audioFileInfo1, AudioFileInfo audioFileInfo2, AudioFileInfo audioFileInfo3)
         {
             //throw new NotImplementedException();
+        }
+
+
+        public void Delete(AudioFileInfo audioFileInfo)
+        {
+            files.Remove(audioFileInfo);
         }
     }
 }

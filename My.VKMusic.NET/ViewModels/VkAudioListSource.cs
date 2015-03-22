@@ -51,5 +51,11 @@ namespace My.VKMusic.ViewModels
             long? after_id = after == null ? null : (long?)after.Id;
             api.AudioReorder(audio.Id, audio.OwnerId, before_id, after_id);
         }
+
+
+        public void Delete(AudioFileInfo audioFileInfo)
+        {
+            api.AudioDelete(audioFileInfo.Id, audioFileInfo.OwnerId);
+        }
     }
 }

@@ -22,7 +22,7 @@ namespace My.VKMusic.Views.DragManagement
 
         public event EventHandler<AudioReorderEventArgs> Reorder;
 
-        internal  void OnDragStart(object sender)
+        internal void OnDragStart(object sender)
         {
             FrameworkElement dragControl = sender as FrameworkElement;            
             dragControl.GiveFeedback += dragControl_GiveFeedback;

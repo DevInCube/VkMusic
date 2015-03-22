@@ -140,6 +140,17 @@ namespace VkNET
             return int.Parse(res.Value<string>());
         }
 
+        public void AudioDelete(long audio_id, long owner_id)
+        {
+            var parameters = new ParametersCollection() {
+                {"audio_id", audio_id},
+                {"owner_id", owner_id},
+            };
+            string request = CreateMethodRequest("audio.delete", parameters);
+            var res = GetJSONResponse(request)["response"];
+            CheckForGlobalError(res);
+        }
+
         public AudioFileInfo AudioGetById(long owner_id, long audio_id)
         {
             var parameters = new ParametersCollection { 
@@ -285,6 +296,6 @@ namespace VkNET
                 throw ex;
             }
         }
-        
+      
     }
 }
