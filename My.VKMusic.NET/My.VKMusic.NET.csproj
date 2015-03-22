@@ -72,11 +72,15 @@
     <Compile Include="ViewModels\ObservableObject.cs" />
     <Compile Include="ViewModels\RelayCommand.cs" />
     <Compile Include="ViewModels\SimpleCommand.cs" />
+    <Compile Include="ViewModels\VkAudioListSource.cs" />
     <Compile Include="Views\AudioItem.xaml.cs">
       <DependentUpon>AudioItem.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\AudioListControl.xaml.cs">
       <DependentUpon>AudioListControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\CurrentAudioControl.xaml.cs">
+      <DependentUpon>CurrentAudioControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\DragManagement\AudioReorderEventArgs.cs" />
     <Compile Include="Views\DragManagement\DragContext.cs" />
@@ -103,6 +107,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Views\AudioListControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\CurrentAudioControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

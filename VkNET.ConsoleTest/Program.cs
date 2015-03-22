@@ -25,7 +25,8 @@ namespace VkNET.ConsoleTest
                 Console.WriteLine("Auth OK");
                 Stopwatch sw = new Stopwatch();
                 sw.Start();
-                vk.AudioGet();
+                int total = 0;
+                vk.AudioGet(null, null, out total);
                 sw.Stop();
                 Console.WriteLine(sw.ElapsedMilliseconds);
                 //vk.AudioGetAlbums().ForEach(a => Console.WriteLine(a));

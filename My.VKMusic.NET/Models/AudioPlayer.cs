@@ -4,17 +4,35 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace My.VKMusic.Models
 {
-    public class AudioPlayer : IDisposable
+    public class AudioPlayer : ObservableObject, IDisposable
     {
 
         private AudioFile audio;
-
-        private IWavePlayer waveOutDevice;
+        private int _Position, _LoadingPosition, _TotalPosition;
+        private WaveOut waveOutDevice;
         private AudioFileReader audioFileReader;
+
+        public int Position
+        {
+            get { return _Position; }
+            set { _Position = value; OnPropertyChanged("Position"); }
+        }
+
+        public int LoadingPosition
+        {
+            get { return _LoadingPosition; }
+            set { _LoadingPosition = value; OnPropertyChanged("LoadingPosition"); }
+        }
+        public int TotalPosition
+        {
+            get { return _TotalPosition; }
+            set { _TotalPosition = value; OnPropertyChanged("TotalPosition"); }
+        }
 
         public AudioPlayer()
         {
@@ -31,17 +49,38 @@ namespace My.VKMusic.Models
             waveOutDevice.Init(audioFileReader);
             if (state == PlaybackState.Playing) this.Play();
         }
+        
 
         public void Play()
         {
-            waveOutDevice.Play();
-            audio.IsPlaying = true;
+            System.Timers.Timer t = new System.Timers.Timer(500);
+            t.AutoReset = true;
+            t.Elapsed += (s, e) => {
+                try
+                {
+                    Position = (int)(audioFileReader.CurrentTime.TotalSeconds);
+                    TotalPosition = (int)audioFileReader.TotalTime.TotalSeconds;
+                }
+                catch { }
+            };
+            t.Start();
+            Task.Factory.StartNew(() =>
+            {
+                audioFileReader = audio.GetReader();                
+                waveOutDevice = new WaveOut();                
+                waveOutDevice.Init(audioFileReader);                
+                waveOutDevice.Play();
+                audio.IsPlaying = true;              
+            });
         }
+
 
         public void Stop()
         {
-            waveOutDevice.Stop();
-            audio.IsPlaying = false;
+            if (waveOutDevice != null)
+                waveOutDevice.Stop();
+            if (audio != null)
+                audio.IsPlaying = false;
         }
 
         public void Pause()

@@ -36,7 +36,7 @@ namespace My.VKMusic.NET
             loader.DoWork += (sender2, e2) =>
             {
                 var vk2 = e2.Argument as VkAPI;
-                var audios = vk2.AudioGet();
+                var audios = new List<AudioFileInfo>();// vk2.AudioGet();
                 e2.Result = audios;
             };
             loader.RunWorkerCompleted += (s2, e2) =>

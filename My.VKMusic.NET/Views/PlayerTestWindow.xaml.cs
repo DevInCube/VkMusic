@@ -19,6 +19,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using VkNET.Models;
 using VkNET.Extensions;
+using My.VKMusic.Models;
 
 namespace My.VKMusic.Views
 {
@@ -31,10 +32,15 @@ namespace My.VKMusic.Views
         public const double SCROLL_LOAD_KOEF = 1.0D;
 
         private bool _LoadingStarted, _Shuffle;
-        private IAudioListSource audioSource = new TestAudioSource();       
+        public AudioPlayer Player { get; set; }
+        private AudioFile _CurrentAudio;
+        private IAudioListSource audioSource = new VkAudioListSource();       
         private int position = 0;
         private int loadCount = 10;
-        private AudioFile currentAudio = null;
+        public AudioFile CurrentAudio {
+            get { return _CurrentAudio; }
+            set { _CurrentAudio = value; OnPropertyChanged("CurrentAudio"); }
+        }
 
         public DragManager DragManager { get; set; }
         public bool CanReorder { get; set; }
@@ -74,11 +80,23 @@ namespace My.VKMusic.Views
             DragManager.Reorder += DragManager_Reorder;
             this.OnDrag = (MouseButtonEventHandler)((sender, e) => { DragManager.OnDragStart(sender); });
             this.PlayAudioCommand = new RelayCommand((o) => {
-                if (currentAudio != null) 
-                    currentAudio.IsPlaying = false; //@todo
                 var newAudio = (o as AudioFile);
-                newAudio.IsPlaying = !newAudio.IsPlaying;//@todo
-                currentAudio = newAudio;
+                if (CurrentAudio != null && CurrentAudio!=newAudio)
+                {
+                    Player.Stop();
+                    CurrentAudio.IsPlaying = false;
+                }  
+                SetCurrentAudio(newAudio);              
+                if (newAudio.IsPlaying)
+                {
+                    Player.Pause();
+                }
+                else
+                {
+                    Player.Play();
+                }
+                //newAudio.IsPlaying = !newAudio.IsPlaying;//@todo
+                               
             });
             this.EditAudioCommand = new RelayCommand((o) =>
             {
@@ -100,22 +118,39 @@ namespace My.VKMusic.Views
                     LoadItems();
                 }
             });
-            this.DataContext = this;
-
-            audioSource.Load();                        
+            this.Player = new AudioPlayer();
+            this.DataContext = this;            
 
             this.Loaded += PlayerTestWindow_Loaded;
+        }
+
+        private void SetCurrentAudio(AudioFile newAudio)
+        {
+            if (CurrentAudio != null
+                && newAudio != CurrentAudio)
+                CurrentAudio.IsCurrent = false;
+            newAudio.IsCurrent = true;
+            if (CurrentAudio != newAudio) Player.Init(newAudio);
+            CurrentAudio = newAudio;
         }
 
         void ReloadItems()
         {
             this.Items.Clear();
             position = 0;
-            LoadItems();
+            LoadItems(() => {
+                if (CurrentAudio == null)
+                {
+                    var audio = Items.FirstOrDefault();
+                    if (audio != null)
+                        SetCurrentAudio(audio as AudioFile);
+                }
+            });
         }
 
-        void LoadItems()
+        void LoadItems(Action callback = null)
         {
+            if (audioSource.AudioItems == null) return;
             int totalItemsCount = audioSource.AudioItems.Count;
             if (!IsLoading && position < totalItemsCount)
             {
@@ -123,7 +158,7 @@ namespace My.VKMusic.Views
                 BackgroundWorker loader = new BackgroundWorker();
                 loader.DoWork += (args2, e2) =>
                 {
-                    Thread.Sleep(1000);
+                    //Thread.Sleep(1000);//@test
                 };
                 loader.RunWorkerCompleted += (args2, e2) =>
                 {
@@ -138,6 +173,8 @@ namespace My.VKMusic.Views
                     if (position >= totalItemsCount)
                         position = totalItemsCount;
                     IsLoading = false;
+                    if (callback != null)
+                        callback.Invoke();
                 };
                 loader.RunWorkerAsync();
             }
@@ -145,6 +182,8 @@ namespace My.VKMusic.Views
 
         void PlayerTestWindow_Loaded(object sender, RoutedEventArgs e)
         {
+            audioSource.Load();
+            ReloadItems();
             LoadItems();
         }
 

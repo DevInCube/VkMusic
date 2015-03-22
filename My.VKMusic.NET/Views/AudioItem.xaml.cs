@@ -151,31 +151,32 @@ namespace My.VKMusic.Views
             AudioFile file = this.DataContext as AudioFile;
             if (file != null)
                 file.PropertyChanged += file_PropertyChanged;
+            file.IsCurrent = file.IsCurrent;
         }
 
         void file_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (e.PropertyName.Equals("IsSelected"))
+            if (e.PropertyName.Equals("IsCurrent"))
             {
-                item.Background = (this.DataContext as AudioFile).IsSelected ? currentColor : Brushes.WhiteSmoke;
-                artistLabel.Foreground = (this.DataContext as AudioFile).IsSelected ? Brushes.White : artistFG;
+                item.Background = (this.DataContext as AudioFile).IsCurrent ? currentColor : Brushes.WhiteSmoke;
+                artistLabel.Foreground = (this.DataContext as AudioFile).IsCurrent ? Brushes.White : artistFG;
                 titleLabel.Foreground = divLabel.Foreground =
-                    (this.DataContext as AudioFile).IsSelected ? Brushes.White : Brushes.Black;
+                    (this.DataContext as AudioFile).IsCurrent ? Brushes.White : Brushes.Black;
             }
         }
 
         void item_MouseLeave(object sender, MouseEventArgs e)
         {
-            var context = this.DataContext as ADragVM;
+            var context = this.DataContext as AudioFile;
             context.IsMouseHover = false;
-            item.Background = context.IsSelected ? currentColor : Brushes.WhiteSmoke;
+            item.Background = context.IsCurrent ? currentColor : Brushes.WhiteSmoke;
         }
 
         void item_MouseEnter(object sender, MouseEventArgs e)
         {
-            var context = this.DataContext as ADragVM;
+            var context = this.DataContext as AudioFile;
             context.IsMouseHover = true;
-            item.Background = context.IsSelected ? currentColor : hoverColor;
+            item.Background = context.IsCurrent ? currentColor : hoverColor;
         }
     }
 }

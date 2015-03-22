@@ -114,19 +114,19 @@ namespace VkNET
             return files;
         }
 
-        public List<AudioFileInfo> AudioGet()
+        public List<AudioFileInfo> AudioGet(int? offset, int? count, out int totalCount)
         {
             var parameters = new ParametersCollection() {
                 {"owner_id", authData.UserId},
                 {"need_user", 0},
-                {"offset", 0},
-                {"count", 10},
+                {"offset", offset},
+                {"count", count},
             };
             string request = CreateMethodRequest("audio.get", parameters);
             WebClient client = new WebClient();
             string response = client.DownloadString(request);
             var res = JObject.Parse(response)["response"];
-            long count = res[0].Value<long>(); //
+            totalCount = res[0].Value<int>(); //
             return ToList(res);
         }
 

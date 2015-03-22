@@ -21,11 +21,11 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <Button Content="I&gt;" Width="26" BorderThickness="0" FontWeight="Bold"
+            <Button Content="I&gt;" Width="26" Height="26" BorderThickness="0" FontWeight="Bold" Foreground="Gray"
                     Command="{Binding PlayAudioCommand, ElementName=this}" CommandParameter="{Binding}"
                     Visibility="{Binding IsPlaying, Converter={StaticResource Vis}, ConverterParameter=true}"
                     Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"/>
-            <Button Content="I I" Width="26" BorderThickness="0" FontWeight="Bold"
+            <Button Content="I I" Width="26" Height="26" BorderThickness="0" FontWeight="Bold" Foreground="White"
                     Command="{Binding PlayAudioCommand, ElementName=this}" CommandParameter="{Binding}"
                     Visibility="{Binding IsPlaying, Converter={StaticResource Vis}, ConverterParameter=false}"
                      Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" />
@@ -38,10 +38,10 @@
                 Visibility="{Binding IsMouseHover, Converter={StaticResource Vis}, ConverterParameter=false}">                
                 <Label x:Name="drag" Tag="{Binding ElementName=item}" Content="..." Height="Auto" VerticalContentAlignment="Center" PreviewMouseLeftButtonDown="AudioItem_PreviewMouseLeftButtonDown"
                         Visibility="{Binding CanReorder, ElementName=this, Converter={StaticResource Vis}}"/>
-                <Button Content="E"  Height="26" Width="26" FontWeight="Bold" BorderThickness="0"  
+                <Button Content="E"  Height="26" Width="26" FontWeight="Bold" BorderThickness="0"  Foreground="LightSkyBlue"
                         Command="{Binding EditAudioCommand, ElementName=this}" CommandParameter="{Binding}"
                     Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"/>
-                <Button Content="X" Height="26" Width="26" FontWeight="Bold" BorderThickness="0"
+                <Button Content="X" Height="26" Width="26" FontWeight="Bold" BorderThickness="0" Foreground="LightSkyBlue"
                         Command="{Binding DeleteAudioCommand, ElementName=this}" CommandParameter="{Binding}"
                     Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"/>
             </StackPanel >

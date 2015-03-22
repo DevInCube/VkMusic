@@ -3,23 +3,36 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:v="clr-namespace:My.VKMusic.Views" 
         x:Name="this"
-        Title="PlayerTestWindow" Height="300" Width="300">
+        Title="PlayerTestWindow" Height="400" Width="300">
     <Grid>
         <DockPanel>
-            <Grid DockPanel.Dock="Top" Background="WhiteSmoke">
-                <CheckBox IsChecked="{Binding Shuffle}" Content="Shuffle" Margin="5"></CheckBox>
-            </Grid>
-        
-        <v:AudioListControl DataContext="{Binding Items}"
-                            CanReorder ="{Binding CanReorder, ElementName=this}"
-                            PlayAudioCommand ="{Binding DataContext.PlayAudioCommand, ElementName=this}"
-                            EditAudioCommand ="{Binding DataContext.EditAudioCommand, ElementName=this}"
-                            DeleteAudioCommand ="{Binding DataContext.DeleteAudioCommand, ElementName=this}"
-                            DragManager="{Binding DataContext.DragManager, ElementName=this}"
-                            OnDrag="{Binding DataContext.OnDrag, ElementName=this}"
-                            ScrollCommand="{Binding DataContext.ScrollCommand, ElementName=this}"
-                            IsLoading="{Binding DataContext.IsLoading, ElementName=this, Mode=TwoWay}"
-                            />
+            <Grid DockPanel.Dock="Top" Background="#E1E7ED" >
+                <StackPanel >
+                    <v:CurrentAudioControl DataContext="{Binding CurrentAudio}"/>
+                    <CheckBox IsChecked="{Binding Shuffle}" Content="Shuffle" Margin="10"></CheckBox>
+                    <StackPanel Orientation="Horizontal" DataContext="{Binding Player}">
+                        <TextBlock Text="{Binding Position, StringFormat=Position {0}}"/>
+                        <TextBlock Text="{Binding LoadingPosition, StringFormat= Loading {0}}"/>
+                        <TextBlock Text="{Binding TotalPosition, StringFormat= Total {0}}"/>
+                    </StackPanel>
+                    <Border Margin="0,0,0,0"
+                            BorderBrush="LightGray"
+                            BorderThickness="0,2,0,0"
+                            CornerRadius="0">                        
+                    </Border>
+                    
+                </StackPanel>
+            </Grid>        
+            <v:AudioListControl DataContext="{Binding Items}"
+                                CanReorder ="{Binding CanReorder, ElementName=this}"
+                                PlayAudioCommand ="{Binding DataContext.PlayAudioCommand, ElementName=this}"
+                                EditAudioCommand ="{Binding DataContext.EditAudioCommand, ElementName=this}"
+                                DeleteAudioCommand ="{Binding DataContext.DeleteAudioCommand, ElementName=this}"
+                                DragManager="{Binding DataContext.DragManager, ElementName=this}"
+                                OnDrag="{Binding DataContext.OnDrag, ElementName=this}"
+                                ScrollCommand="{Binding DataContext.ScrollCommand, ElementName=this}"
+                                IsLoading="{Binding DataContext.IsLoading, ElementName=this, Mode=TwoWay}"
+                                />
         </DockPanel>
     </Grid>
 </Window>

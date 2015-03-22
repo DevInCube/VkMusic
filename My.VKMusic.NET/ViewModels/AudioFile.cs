@@ -14,7 +14,7 @@ namespace My.VKMusic.ViewModels
     {
 
         private AudioFileInfo info;
-        private bool _IsPlaying, _IsSelected;
+        private bool _IsPlaying, _IsCurrent;
         private AudioFileReader reader;
 
         public AudioFileInfo Info { get { return info; } }
@@ -26,11 +26,12 @@ namespace My.VKMusic.ViewModels
             set { _IsPlaying = value; OnPropertyChanged("IsPlaying"); }
         }
 
-        public bool IsSelected
+        public bool IsCurrent
         {
-            get { return _IsSelected; }
-            set { _IsSelected = value; OnPropertyChanged("IsSelected"); }
+            get { return _IsCurrent; }
+            set { _IsCurrent = value; OnPropertyChanged("IsCurrent"); }
         }
+       
 
         public AudioFile(AudioFileInfo info)
         {
@@ -40,7 +41,7 @@ namespace My.VKMusic.ViewModels
         }
 
         public AudioFileReader GetReader()
-        {
+        {            
             return reader;
         }
 
@@ -55,5 +56,6 @@ namespace My.VKMusic.ViewModels
             AudioFile af = other as AudioFile;
             return af.info.Equals(this.info);
         }
+
     }
 }
