@@ -158,10 +158,11 @@ namespace My.VKMusic.Views
         {
             if (e.PropertyName.Equals("IsCurrent"))
             {
-                item.Background = (this.DataContext as AudioFile).IsCurrent ? currentColor : Brushes.WhiteSmoke;
-                artistLabel.Foreground = (this.DataContext as AudioFile).IsCurrent ? Brushes.White : artistFG;
-                titleLabel.Foreground = divLabel.Foreground =
-                    (this.DataContext as AudioFile).IsCurrent ? Brushes.White : Brushes.Black;
+                bool current = (this.DataContext as AudioFile).IsCurrent;
+                item.Background = current ? currentColor : Brushes.WhiteSmoke;
+                artistLabel.Foreground = current ? Brushes.White : artistFG;
+                titleLabel.Foreground = divLabel.Foreground = current ? Brushes.White : Brushes.Black;
+                time.Foreground = current ? Brushes.White : Brushes.DimGray;
             }
         }
 

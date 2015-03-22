@@ -6,8 +6,9 @@
              mc:Ignorable="d" 
              d:DesignHeight="80" d:DesignWidth="400">
     <Grid>
-        <StackPanel Margin="5">
-            <Label FontWeight="Bold" FontSize="18" Content="{Binding Info.Artist, FallbackValue=Artist}"/>
+        <StackPanel Margin="5" Orientation="Horizontal">
+            <Label FontWeight="Bold" FontSize="16" Foreground="#2B587A"  Content="{Binding Info.Artist, FallbackValue=Artist}"/>
+            <Label Content="-" FontSize="16"/>
             <Label FontSize="16" Content="{Binding Info.Title, FallbackValue=Title}"/>
         </StackPanel>
     </Grid>

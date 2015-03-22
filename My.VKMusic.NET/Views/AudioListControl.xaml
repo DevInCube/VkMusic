@@ -33,6 +33,7 @@
             <Label Content="Loading..." HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"/>
         </Grid>
         <ListBox ScrollViewer.VerticalScrollBarVisibility="Auto"
+                 ScrollViewer.HorizontalScrollBarVisibility="Hidden"
                  ScrollViewer.ScrollChanged="ScrollViewer_ScrollChanged"
                 VirtualizingPanel.IsVirtualizing="True"
                 VirtualizingPanel.VirtualizationMode="Recycling"
@@ -41,6 +42,7 @@
                 Drop="AudioItem_Drop"
                 DragEnter="AudioItem_DragEnter"
                 DragLeave="ItemsControl_DragLeave"
+                 BorderThickness="0"
                  MaxWidth="470">           
             <ListBox.Resources>
                 <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Transparent" />

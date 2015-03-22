@@ -76,7 +76,7 @@ namespace My.VKMusic.Views
             this.Items.CollectionChanged += Items_CollectionChanged;            
 
             this.DragManager = new DragManager();
-            CanReorder = false;
+            CanReorder = true;
             DragManager.Reorder += DragManager_Reorder;
             this.OnDrag = (MouseButtonEventHandler)((sender, e) => { DragManager.OnDragStart(sender); });
             this.PlayAudioCommand = new RelayCommand((o) => {

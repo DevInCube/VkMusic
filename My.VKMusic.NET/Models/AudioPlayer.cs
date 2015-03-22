@@ -12,26 +12,35 @@ namespace My.VKMusic.Models
     public class AudioPlayer : ObservableObject, IDisposable
     {
 
-        private AudioFile audio;
-        private int _Position, _LoadingPosition, _TotalPosition;
+        private AudioFile audio;        
         private WaveOut waveOutDevice;
         private AudioFileReader audioFileReader;
 
         public int Position
         {
-            get { return _Position; }
-            set { _Position = value; OnPropertyChanged("Position"); }
+            get
+            {
+                return (waveOutDevice != null) ? (int)audioFileReader.CurrentTime.TotalSeconds : 0;
+            }
+            set
+            {
+                if (waveOutDevice != null)
+                {
+                    audioFileReader.CurrentTime = new TimeSpan(0, 0, value);
+                    OnPropertyChanged("Position");
+                }
+            }
         }
-
-        public int LoadingPosition
-        {
-            get { return _LoadingPosition; }
-            set { _LoadingPosition = value; OnPropertyChanged("LoadingPosition"); }
-        }
+     
         public int TotalPosition
         {
-            get { return _TotalPosition; }
-            set { _TotalPosition = value; OnPropertyChanged("TotalPosition"); }
+            get { return (waveOutDevice != null) ? (int)audioFileReader.TotalTime.TotalSeconds : 1; }           
+        }
+
+        public float Volume
+        {
+            get { return (waveOutDevice == null) ? 1 : waveOutDevice.Volume; }
+            set { if (waveOutDevice != null) { waveOutDevice.Volume = value; OnPropertyChanged("Volume"); } }
         }
 
         public AudioPlayer()
@@ -58,8 +67,8 @@ namespace My.VKMusic.Models
             t.Elapsed += (s, e) => {
                 try
                 {
-                    Position = (int)(audioFileReader.CurrentTime.TotalSeconds);
-                    TotalPosition = (int)audioFileReader.TotalTime.TotalSeconds;
+                    OnPropertyChanged("Position");
+                    OnPropertyChanged("TotalPosition");
                 }
                 catch { }
             };

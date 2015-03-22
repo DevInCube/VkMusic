@@ -79,6 +79,7 @@
     <Compile Include="Views\AudioListControl.xaml.cs">
       <DependentUpon>AudioListControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Converters\TimeSpanConverter.cs" />
     <Compile Include="Views\CurrentAudioControl.xaml.cs">
       <DependentUpon>CurrentAudioControl.xaml</DependentUpon>
     </Compile>
