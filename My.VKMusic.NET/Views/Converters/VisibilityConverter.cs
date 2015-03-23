@@ -20,7 +20,7 @@ namespace My.VKMusic.Views.Converters
             else if (value is bool)
                 val = bool.Parse(value.ToString());
             else
-                val = false; // @todo
+                val = true; // @todo
             return (invert ? !val : val) ? Visibility.Visible : Visibility.Collapsed;
         }
 

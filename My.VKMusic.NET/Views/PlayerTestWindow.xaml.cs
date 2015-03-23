@@ -127,7 +127,19 @@ namespace My.VKMusic.Views
                 }
             });
             this.Player = new AudioPlayer();
+            Player.TrackFinished += Player_TrackFinished;
             this.DataContext = this;           
+        }
+
+        void Player_TrackFinished(AudioFile obj)
+        {
+            this.Dispatcher.Invoke((Action)(() =>
+            {
+                if (true) //not loop @todo
+                {
+                    PlayAudio(GetNextAudio());
+                }
+            }));
         }
 
         private void PlayAudio(AudioFile newAudio)

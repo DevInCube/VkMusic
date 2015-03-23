@@ -84,10 +84,14 @@
     </Window.Resources>
     <Grid>
         <DockPanel Background="LightGray">
-            <Grid DockPanel.Dock="Top" Background="#E1E7ED" >
+            <Grid DockPanel.Dock="Top" Height="100" Visibility="{Binding CurrentAudio, Converter={StaticResource Vis}, ConverterParameter=true}" Background="#E1E7ED">
+                <Label Content="Loading..." VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="18" FontWeight="Thin"/>
+            </Grid>
+            <Grid DockPanel.Dock="Top" Background="#E1E7ED" Visibility="{Binding CurrentAudio, Converter={StaticResource Vis}, ConverterParameter=false}" >                
                 <StackPanel >
                     <v:CurrentAudioControl DataContext="{Binding CurrentAudio}"/>
-                    <StackPanel Orientation="Horizontal" Margin="10,-5,10,0">
+                    
+                    <StackPanel Orientation="Horizontal" Margin="10,-5,10,0" >
                         <Button Content="&lt;&lt;" Command="{Binding PrevCommand}" Height="26" Width="26" Foreground="#2B587A" FontWeight="Bold" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"/>
                         <Button Content="I&gt;" Width="26" Height="26" BorderThickness="0" FontWeight="Bold" Foreground="#2B587A"
                     Command="{Binding PlayAudioCommand}" CommandParameter="{Binding CurrentAudio}"

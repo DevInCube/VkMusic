@@ -16,6 +16,8 @@ namespace My.VKMusic.Models
         private WaveOut waveOutDevice;
         private AudioFileReader audioFileReader;
 
+        public event Action<AudioFile> TrackFinished;
+
         public int Position
         {
             get
@@ -58,7 +60,6 @@ namespace My.VKMusic.Models
             waveOutDevice.Init(audioFileReader);
             if (state == PlaybackState.Playing) this.Play();
         }
-        
 
         public void Play()
         {
@@ -73,14 +74,23 @@ namespace My.VKMusic.Models
                 catch { }
             };
             t.Start();
+            
             Task.Factory.StartNew(() =>
             {
-                audioFileReader = audio.GetReader();                
-                waveOutDevice = new WaveOut();                
-                waveOutDevice.Init(audioFileReader);                
+                audioFileReader = audio.GetReader();
+                waveOutDevice = new WaveOut();
+                waveOutDevice.Init(audioFileReader);
                 waveOutDevice.Play();
-                audio.IsPlaying = true;              
+                //waveOutDevice.PlaybackStopped += waveOutDevice_PlaybackStopped;
+                audio.IsPlaying = true;
+
             });
+        }
+
+        void waveOutDevice_PlaybackStopped(object sender, StoppedEventArgs e)
+        {
+            if (TrackFinished != null)
+                TrackFinished.Invoke(audio);
         }
 
 
