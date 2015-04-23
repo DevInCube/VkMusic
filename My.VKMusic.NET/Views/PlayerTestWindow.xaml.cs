@@ -68,6 +68,7 @@ namespace My.VKMusic.Views
         public ICommand ScrollCommand { get; set; }
         public ICommand DownloadCommand { get; set; }
         public ICommand CancelDownloadCommand { get; set; }
+        public ICommand ExpandCommand { get; set; }
 
         public bool IsLoading 
         { 
@@ -159,6 +160,15 @@ namespace My.VKMusic.Views
             CancelDownloadCommand = new RelayCommand((args) =>
             {
                 this.dClient.CancelAsync();
+            });
+            ExpandCommand = new RelayCommand((args) =>
+            {
+                var item = (args as AudioFile);
+                if (item.Lyrics == null)
+                {
+
+                }
+                item.DetailsExpanded = !item.DetailsExpanded;
             });
             this.Player = new AudioPlayer();
             Player.TrackFinished += Player_TrackFinished;

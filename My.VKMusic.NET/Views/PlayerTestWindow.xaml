@@ -93,7 +93,7 @@
                     <DockPanel Margin="10,-5,10,0">
                         <StackPanel DockPanel.Dock="Left" Orientation="Horizontal"  >
                             <Button Content="&lt;&lt;" Command="{Binding PrevCommand}" Height="26" Width="26" Foreground="#2B587A" FontWeight="Bold" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"/>
-                            <Button Content="I&gt;" Width="26" Height="26" BorderThickness="0" FontWeight="Bold" Foreground="#2B587A"
+                            <Button FontFamily="Marlett" FontSize="18" Content="4" Width="26" Height="26" BorderThickness="0" FontWeight="Bold" Foreground="#2B587A"
                         Command="{Binding PlayAudioCommand}" CommandParameter="{Binding CurrentAudio}"
                         Visibility="{Binding CurrentAudio.IsPlaying, Converter={StaticResource Vis}, ConverterParameter=true}"
                         Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"/>

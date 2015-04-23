@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using VkNET.Models;
 
 namespace My.VKMusic.ViewModels
@@ -16,6 +17,8 @@ namespace My.VKMusic.ViewModels
         private AudioFileInfo info;
         private bool _IsPlaying, _IsCurrent;
         private AudioFileReader reader;
+        private bool _DetailsExpanded;
+        private string _Lyrics;
 
         public AudioFileInfo Info { get { return info; } }
         public string Duration { get { return new TimeSpan(0, 0, (int)info.Duration).ToString(); } }
@@ -31,11 +34,28 @@ namespace My.VKMusic.ViewModels
             get { return _IsCurrent; }
             set { _IsCurrent = value; OnPropertyChanged("IsCurrent"); }
         }
+
+        public bool DetailsExpanded
+        {
+            get { return _DetailsExpanded; }
+            set { _DetailsExpanded = value; OnPropertyChanged("DetailsExpanded"); }
+        }
+
+        public string Lyrics
+        {
+            get { return _Lyrics; }
+            set { _Lyrics = value; OnPropertyChanged("Lyrics"); }
+        }
+
+        public ICommand ExpandCommand { get; set; }
        
 
         public AudioFile(AudioFileInfo info)
         {
             this.info = info;
+            ExpandCommand = new SimpleCommand(() => {
+                DetailsExpanded = !DetailsExpanded;
+            });
         }
 
         public AudioFileReader GetReader()

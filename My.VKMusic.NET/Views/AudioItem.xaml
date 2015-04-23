@@ -6,13 +6,13 @@
               xmlns:res="clr-namespace:My.VKMusic.Properties" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
-             d:DesignHeight="50" d:DesignWidth="300" Width="450">
+             d:DesignHeight="300" d:DesignWidth="300" Width="450">
     <UserControl.Resources>
         <conv:VisibilityConverter x:Key="Vis"/>
         
     </UserControl.Resources>
-    <Grid Background="WhiteSmoke" MaxHeight="36" x:Name="item">
-        <Grid VerticalAlignment="Center" Margin="5">
+    <DockPanel Background="WhiteSmoke" x:Name="item" Height="Auto">
+        <Grid DockPanel.Dock="Top" VerticalAlignment="Center" Margin="5" MaxHeight="36">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
@@ -21,7 +21,7 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <Button Content="I&gt;" Width="26" Height="26" BorderThickness="0" FontWeight="Bold" Foreground="Gray"
+            <Button FontFamily="Marlett" FontSize="18" Content="4" Width="26" Height="26" BorderThickness="0" FontWeight="Bold" Foreground="Gray"
                     Command="{Binding PlayAudioCommand, ElementName=this}" CommandParameter="{Binding}"
                     Visibility="{Binding IsPlaying, Converter={StaticResource Vis}, ConverterParameter=true}"
                     Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"/>
@@ -35,16 +35,34 @@
             <Label x:Name="time" Content="{Binding Duration, FallbackValue=00:00}" Grid.Column="4" FontSize="10" Foreground="DimGray"
                    Visibility="{Binding IsMouseHover, Converter={StaticResource Vis}, ConverterParameter=true}"></Label>
             <StackPanel Grid.Column="5" Orientation="Horizontal"
-                Visibility="{Binding IsMouseHover, Converter={StaticResource Vis}, ConverterParameter=false}">                
-                <Label x:Name="drag" Tag="{Binding ElementName=item}" Content="..." Height="Auto" VerticalContentAlignment="Center" PreviewMouseLeftButtonDown="AudioItem_PreviewMouseLeftButtonDown"
+                        Visibility="{Binding IsMouseHover, Converter={StaticResource Vis}, ConverterParameter=false}">
+                <Label x:Name="drag" Tag="{Binding ElementName=item}" FontFamily="Marlett" FontSize="16" Content="v" Height="Auto" VerticalContentAlignment="Center" PreviewMouseLeftButtonDown="AudioItem_PreviewMouseLeftButtonDown"
                         Visibility="{Binding CanReorder, ElementName=this, Converter={StaticResource Vis}}"/>
-                <Button Content="E"  Height="26" Width="26" FontWeight="Bold" BorderThickness="0"  Foreground="LightSkyBlue"
-                        Command="{Binding EditAudioCommand, ElementName=this}" CommandParameter="{Binding}"
-                    Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"/>
-                <Button Content="X" Height="26" Width="26" FontWeight="Bold" BorderThickness="0" Foreground="LightSkyBlue"
-                        Command="{Binding DeleteAudioCommand, ElementName=this}" CommandParameter="{Binding}"
-                    Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"/>
-            </StackPanel >
+                <Button FontFamily="Marlett" FontSize="18" Content="u"  Height="26" Width="26" FontWeight="Bold" BorderThickness="0"
+                        Command="{Binding ExpandCommand}"
+                        Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
+                        Visibility="{Binding DetailsExpanded, Converter={StaticResource Vis}, ConverterParameter=true}">
+                </Button>
+                <Button FontFamily="Marlett" FontSize="18" Content="5"  Height="26" Width="26" FontWeight="Bold" BorderThickness="0"
+                        Command="{Binding ExpandCommand}"
+                        Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
+                        Visibility="{Binding DetailsExpanded, Converter={StaticResource Vis}, ConverterParameter=false}">
+                </Button>
+            </StackPanel>
         </Grid>
-    </Grid>
+        <Grid Background="White" Visibility="{Binding DetailsExpanded, Converter={StaticResource Vis}}">
+            <StackPanel>
+                <StackPanel Margin="5,0,5,0" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Content="E" Height="26" Width="26" FontWeight="Bold" BorderThickness="0" 
+                        Command="{Binding EditAudioCommand, ElementName=this}" CommandParameter="{Binding}"
+                        Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"/>
+                    <Button Content="X" Height="26" Width="26" FontWeight="Bold" BorderThickness="0" 
+                        Command="{Binding DeleteAudioCommand, ElementName=this}" CommandParameter="{Binding}"
+                        Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"/>
+                </StackPanel>
+                <TextBlock Text="{Binding Lyrics, FallbackValue=Lyrics}" Margin="15,0,10,5" TextWrapping="Wrap"/>
+            </StackPanel>
+            
+        </Grid>
+    </DockPanel>
 </UserControl>
