@@ -90,20 +90,24 @@
             <Grid DockPanel.Dock="Top" Background="#E1E7ED" Visibility="{Binding CurrentAudio, Converter={StaticResource Vis}, ConverterParameter=false}" >                
                 <StackPanel >
                     <v:CurrentAudioControl DataContext="{Binding CurrentAudio}"/>
-                    
-                    <StackPanel Orientation="Horizontal" Margin="10,-5,10,0" >
-                        <Button Content="&lt;&lt;" Command="{Binding PrevCommand}" Height="26" Width="26" Foreground="#2B587A" FontWeight="Bold" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"/>
-                        <Button Content="I&gt;" Width="26" Height="26" BorderThickness="0" FontWeight="Bold" Foreground="#2B587A"
-                    Command="{Binding PlayAudioCommand}" CommandParameter="{Binding CurrentAudio}"
-                    Visibility="{Binding CurrentAudio.IsPlaying, Converter={StaticResource Vis}, ConverterParameter=true}"
-                    Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"/>
-                        <Button Content="I I" Width="26" Height="26" BorderThickness="0" FontWeight="Bold" Foreground="#2B587A"
-                    Command="{Binding PlayAudioCommand}" CommandParameter="{Binding CurrentAudio}"
-                    Visibility="{Binding CurrentAudio.IsPlaying, Converter={StaticResource Vis}, ConverterParameter=false, FallbackValue=Collapsed}"
-                     Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" />
-                        <Button Content="[_]" Command="{Binding StopCommand}" Height="26" Width="26" Foreground="#2B587A" FontWeight="Bold" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"/>
-                        <Button Content="&gt;&gt;" Command="{Binding NextCommand}" Height="26" Width="26" Foreground="#2B587A" FontWeight="Bold" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"/>
-                    </StackPanel>
+                    <DockPanel Margin="10,-5,10,0">
+                        <StackPanel DockPanel.Dock="Left" Orientation="Horizontal"  >
+                            <Button Content="&lt;&lt;" Command="{Binding PrevCommand}" Height="26" Width="26" Foreground="#2B587A" FontWeight="Bold" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"/>
+                            <Button Content="I&gt;" Width="26" Height="26" BorderThickness="0" FontWeight="Bold" Foreground="#2B587A"
+                        Command="{Binding PlayAudioCommand}" CommandParameter="{Binding CurrentAudio}"
+                        Visibility="{Binding CurrentAudio.IsPlaying, Converter={StaticResource Vis}, ConverterParameter=true}"
+                        Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"/>
+                            <Button Content="I I" Width="26" Height="26" BorderThickness="0" FontWeight="Bold" Foreground="#2B587A"
+                        Command="{Binding PlayAudioCommand}" CommandParameter="{Binding CurrentAudio}"
+                        Visibility="{Binding CurrentAudio.IsPlaying, Converter={StaticResource Vis}, ConverterParameter=false, FallbackValue=Collapsed}"
+                         Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" />
+                            <Button Content="[_]" Command="{Binding StopCommand}" Height="26" Width="26" Foreground="#2B587A" FontWeight="Bold" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"/>
+                            <Button Content="&gt;&gt;" Command="{Binding NextCommand}" Height="26" Width="26" Foreground="#2B587A" FontWeight="Bold" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"/>
+                        </StackPanel>
+                        <StackPanel DockPanel.Dock="Right" Orientation="Horizontal"  FlowDirection="RightToLeft">
+                            <Button FontFamily="Marlett" FontSize="20" Content="7" ToolTip="Download" Command="{Binding DownloadCommand}" Height="26" Width="26" Foreground="#2B587A" FontWeight="Bold" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"/>                            
+                        </StackPanel>
+                    </DockPanel>
                     <DockPanel LastChildFill="False">
                         <ToggleButton Style="{StaticResource {x:Static ToolBar.ToggleButtonStyleKey}}" IsChecked="{Binding Shuffle}" Content="Shuffle" Margin="10,0,10,0" VerticalAlignment="Center"></ToggleButton>
                         <Slider DockPanel.Dock="Right" Style="{StaticResource Horizontal_Slider}"
@@ -123,7 +127,20 @@
                     </Border>
                     
                 </StackPanel>
-            </Grid>        
+            </Grid>
+            <Grid DockPanel.Dock="Bottom">
+                <StackPanel>
+                    <Label Content="{Binding DownloadAudioTitle, Mode=OneWay, FallbackValue=Audio}" Margin="5,5,0,-5"/>
+                    <DockPanel>
+                        <Button DockPanel.Dock="Right" FontSize="12" Margin="0,0,5,0" Content="Cancel" ToolTip="Cancel"  Command="{Binding CancelDownloadCommand}" 
+                                Foreground="#2B587A" FontWeight="Thin" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"/>
+                        <Slider Style="{StaticResource Horizontal_Slider}"
+                                Value="{Binding DownloadProgress, Mode=OneWay}" IsEnabled="False" 
+                                VerticalAlignment="Center"
+                                Maximum="100" Margin="10,0,10,0"/>
+                    </DockPanel>
+                </StackPanel>
+            </Grid>
             <v:AudioListControl DataContext="{Binding Items}"
                                 CanReorder ="{Binding DataContext.CanReorder, ElementName=this}"
                                 PlayAudioCommand ="{Binding DataContext.PlayAudioCommand, ElementName=this}"
@@ -133,7 +150,7 @@
                                 OnDrag="{Binding DataContext.OnDrag, ElementName=this}"
                                 ScrollCommand="{Binding DataContext.ScrollCommand, ElementName=this}"
                                 IsLoading="{Binding DataContext.IsLoading, ElementName=this, Mode=TwoWay}"
-                                />
+                                />            
         </DockPanel>
     </Grid>
 </Window>

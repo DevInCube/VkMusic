@@ -20,6 +20,7 @@ using System.Windows.Shapes;
 using VkNET.Models;
 using VkNET.Extensions;
 using My.VKMusic.Models;
+using System.IO;
 
 namespace My.VKMusic.Views
 {
@@ -65,12 +66,28 @@ namespace My.VKMusic.Views
         public ICommand EditAudioCommand { get; set; }
         public ICommand DeleteAudioCommand { get; set; }
         public ICommand ScrollCommand { get; set; }
+        public ICommand DownloadCommand { get; set; }
+        public ICommand CancelDownloadCommand { get; set; }
 
         public bool IsLoading 
         { 
             get { return _LoadingStarted; }
             set { _LoadingStarted = value; OnPropertyChanged("IsLoading"); }
         }
+
+        public int DownloadProgress
+        {
+            get { return _DownloadPosition; }
+            private set { _DownloadPosition = value; OnPropertyChanged("DownloadProgress"); }
+        }
+
+        public string DownloadAudioTitle
+        {
+            get { return _DownloadAudioTitle; }
+            private set { _DownloadAudioTitle = value; OnPropertyChanged("DownloadAudioTitle"); }
+        }
+
+        private System.Net.WebClient dClient;
 
         public PlayerTestWindow()
         {
@@ -126,9 +143,53 @@ namespace My.VKMusic.Views
                     LoadItems();
                 }
             });
+            DownloadCommand = new RelayCommand((args) =>
+            {
+                string urlStr = CurrentAudio.Info.URL;
+                this.DownloadAudioTitle = CurrentAudio.Info.ToString();                
+                using (var dClient = new System.Net.WebClient())
+                {
+                    Uri url = new Uri(urlStr);
+                    dClient.DownloadDataCompleted += dClient_DownloadDataCompleted;
+                    dClient.DownloadProgressChanged += dClient_DownloadProgressChanged;
+                    dClient.DownloadDataAsync(url, CurrentAudio);                    
+                    this.dClient = dClient;
+                }
+            });
+            CancelDownloadCommand = new RelayCommand((args) =>
+            {
+                this.dClient.CancelAsync();
+            });
             this.Player = new AudioPlayer();
             Player.TrackFinished += Player_TrackFinished;
             this.DataContext = this;           
+        }
+
+        void dClient_DownloadProgressChanged(object sender, System.Net.DownloadProgressChangedEventArgs e)
+        {            
+            int progress = e.ProgressPercentage;
+            this.DownloadProgress = progress;
+        }
+
+        void dClient_DownloadDataCompleted(object sender, System.Net.DownloadDataCompletedEventArgs e)
+        {
+            if (e.Error != null)
+            {
+                this.DownloadProgress = 0;
+                return;
+            }
+            byte[] mp3 = e.Result;
+            string dPath = Environment.GetFolderPath(Environment.SpecialFolder.CommonMusic);
+            AudioFile audio = e.UserState as AudioFile;
+            string userDirName = audio.Info.OwnerId.ToString();
+            string audioName = String.Format("{0}.mp3", audio.Info.Id);
+            string userDir = System.IO.Path.Combine(dPath, userDirName);
+            if(!Directory.Exists(userDir))
+            {
+                Directory.CreateDirectory(userDir);
+            }
+            string filePath = System.IO.Path.Combine(userDir, audioName);
+            System.IO.File.WriteAllBytes(filePath, mp3);
         }
 
         void Player_TrackFinished(AudioFile obj)
@@ -269,6 +330,8 @@ namespace My.VKMusic.Views
         #region propchanged
 
         public event PropertyChangedEventHandler PropertyChanged;
+        private int _DownloadPosition;
+        private string _DownloadAudioTitle;
         protected void OnPropertyChanged(string propName)
         {
             if (PropertyChanged != null)
@@ -277,8 +340,7 @@ namespace My.VKMusic.Views
             }
         }
 
-        #endregion
-
+        #endregion        
     }
 
     

@@ -107,7 +107,7 @@ namespace VkNET
             List<AudioFileInfo> files = new List<AudioFileInfo>();            
             for (int i = 0; i < res.Count() - 1; i++)
             {
-                JToken audioToken = res[i + 1];
+                JObject audioToken = res[i + 1] as JObject;
                 AudioFileInfo af = AudioFileInfo.FromJson(audioToken);
                 files.Add(af);
             }
@@ -159,7 +159,8 @@ namespace VkNET
             string request = CreateMethodRequest("audio.getById", parameters);
             var res = GetJSONResponse(request)["response"];            
             if (res.Count() == 0) return null;
-            return AudioFileInfo.FromJson(res[0]);
+            JObject obj = res[0] as JObject;
+            return AudioFileInfo.FromJson(obj);
         }
 
         public string AudioGetLyrics(long lyrics_id)
