@@ -70,6 +70,8 @@
     <Compile Include="Tools\CursorHelper.cs" />
     <Compile Include="ViewModels\AudioFile.cs" />
     <Compile Include="ViewModels\IAudioListSource.cs" />
+    <Compile Include="ViewModels\IWindowVM.cs" />
+    <Compile Include="ViewModels\MainVM.cs" />
     <Compile Include="ViewModels\ObservableObject.cs" />
     <Compile Include="ViewModels\RelayCommand.cs" />
     <Compile Include="ViewModels\SimpleCommand.cs" />
@@ -91,6 +93,9 @@
     <Compile Include="Views\DragManagement\ADragVM.cs" />
     <Compile Include="Views\DragManagement\DragActionType.cs" />
     <Compile Include="Views\DragManagement\DragManager.cs" />
+    <Compile Include="Views\Player2.xaml.cs">
+      <DependentUpon>Player2.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\PlayerTestWindow.xaml.cs">
       <DependentUpon>PlayerTestWindow.xaml</DependentUpon>
     </Compile>
@@ -116,6 +121,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\CurrentAudioControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Player2.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

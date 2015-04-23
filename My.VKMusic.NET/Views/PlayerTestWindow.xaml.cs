@@ -351,6 +351,11 @@ namespace My.VKMusic.Views
         }
 
         #endregion        
+
+        private void AudioListControl_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+
+        }
     }
 
     

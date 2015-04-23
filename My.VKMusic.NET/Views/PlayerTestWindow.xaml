@@ -119,7 +119,8 @@
                         <Label Content="{Binding Player.TotalPosition, Converter={StaticResource TSConv}, FallbackValue=00:00}" FontWeight="Thin" FontSize="10" Foreground="DimGray" DockPanel.Dock="Right"/>
                     </DockPanel>
                     <Slider Style="{StaticResource Horizontal_Slider}"
-                        Value="{Binding Player.Position, Mode=TwoWay}" Maximum="{Binding Player.TotalPosition, Mode=OneWay}" Margin="10,0,10,0"/>                                      
+                            Value="{Binding Player.Position, Mode=TwoWay}" Maximum="{Binding Player.TotalPosition, Mode=OneWay}" Margin="10,0,10,0"
+                            />
                     <Border Margin="0,0,0,0"
                             BorderBrush="LightGray"
                             BorderThickness="0,2,0,0"
@@ -149,7 +150,7 @@
                                 DragManager="{Binding DataContext.DragManager, ElementName=this}"
                                 OnDrag="{Binding DataContext.OnDrag, ElementName=this}"
                                 ScrollCommand="{Binding DataContext.ScrollCommand, ElementName=this}"
-                                IsLoading="{Binding DataContext.IsLoading, ElementName=this, Mode=TwoWay}"
+                                IsLoading="{Binding DataContext.IsLoading, ElementName=this, Mode=TwoWay}"                                
                                 />            
         </DockPanel>
     </Grid>
