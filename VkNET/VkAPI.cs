@@ -15,12 +15,12 @@ using VkNET.Models;
 
 namespace VkNET
 {
-    public class VkAPI
+    public partial class VkAPI
     {
 
         public static readonly string AppID = "4832975";        
 
-        private string api_version = "5.29";
+        private string api_version = "5.30";
         private AuthData authData;
         private IAuthProvider authProvider;
 
@@ -38,9 +38,12 @@ namespace VkNET
 
         private void Auth(Action callback = null)
         {
+            string permissionsString = "status,audio,video,messages," + Permissions.PHOTOS;
+            string[] permissions = permissionsString.Split(',');
+
             NameValueCollection qs = System.Web.HttpUtility.ParseQueryString(string.Empty);
             qs["client_id"] = AppID;
-            qs["scope"] = "status,audio";
+            qs["scope"] = permissionsString;
             qs["redirect_uri"] = "https://oauth.vk.com/blank.html";
             qs["display"] = "page";
             qs["v"] = api_version;
@@ -50,6 +53,7 @@ namespace VkNET
             authProvider.DoAuth(request_url, (AuthData data) =>
             {
                 this.authData = data;
+                this.authData.Permissions = new List<string>(permissions);
                 Timer reAuthTimer = new Timer(data.ExpiresIn * 1000);
                 reAuthTimer.Elapsed += reAuthTimer_Elapsed;
                 reAuthTimer.Start();
@@ -128,6 +132,51 @@ namespace VkNET
             var res = JObject.Parse(response)["response"];
             totalCount = res[0].Value<int>(); //
             return ToList(res);
+        }
+
+        public string VideoGet(long owner, string video_ids)
+        {
+            var parameters = new ParametersCollection() {
+                {"owner_id", owner},
+                {"videos", video_ids},
+            };
+            string request = CreateMethodRequest("video.get", parameters);
+            WebClient client = new WebClient();
+            string response = client.DownloadString(request);
+            var res = JObject.Parse(response)["response"];
+            return res.ToString();
+        }
+
+        public string GetDialogs()
+        {
+            var offset = 0;
+            var count = 20;
+            var parameters = new ParametersCollection() {
+                {"offset", offset},
+                {"count", count},
+            };
+            string request = CreateMethodRequest("messages.getDialogs", parameters);
+            WebClient client = new WebClient();
+            string response = client.DownloadString(request);
+            var res = JObject.Parse(response)["response"];
+            return res.ToString();
+        }
+
+        public string GetMessages()
+        {
+            var offset = 0;
+            var count = 200;
+            var uid = 20872353;
+            var parameters = new ParametersCollection() {
+                {"offset", offset},
+                {"count", count},
+                {"user_id", uid},
+            };
+            string request = CreateMethodRequest("messages.getHistory", parameters);
+            WebClient client = new WebClient();
+            string response = client.DownloadString(request);
+            var res = JObject.Parse(response)["response"];
+            return res.ToString();
         }
 
         public long AudioGetCount(long owner_id)
@@ -297,6 +346,6 @@ namespace VkNET
                 throw ex;
             }
         }
-      
+
     }
 }

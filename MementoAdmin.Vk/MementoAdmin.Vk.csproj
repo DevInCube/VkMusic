@@ -4,15 +4,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{6D6BAF30-2597-4FDB-9BA1-B6D701260D58}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{CE0E81AD-2DA4-4AD7-8D60-DA963023D9FB}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>VkNET</RootNamespace>
-    <AssemblyName>VkNET</AssemblyName>
+    <RootNamespace>MementoAdmin.Vk</RootNamespace>
+    <AssemblyName>MementoAdmin.Vk</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -22,6 +23,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -30,12 +32,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -43,41 +41,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Auth\IAuthDataStorage.cs" />
-    <Compile Include="Auth\IAuthProvider.cs" />
-    <Compile Include="Exceptions\AccessDeniedVkException.cs" />
-    <Compile Include="Exceptions\AlbumFullVkException.cs" />
-    <Compile Include="Exceptions\AccessToAlbumDeniedVkException.cs" />
-    <Compile Include="Exceptions\AccessToAudioDeniedVkException.cs" />
-    <Compile Include="Exceptions\PermissionException.cs" />
-    <Compile Include="Exceptions\UnknownVkException.cs" />
-    <Compile Include="Exceptions\VkException.cs" />
-    <Compile Include="Extensions\BoolExtension.cs" />
-    <Compile Include="Extensions\CollectionExtensions.cs" />
-    <Compile Include="Extensions\StringExtension.cs" />
-    <Compile Include="Models\AudioAlbumInfo.cs" />
-    <Compile Include="Models\AudioFileInfo.cs" />
-    <Compile Include="Models\AudioGenre.cs" />
-    <Compile Include="Models\AudioPopularSettings.cs" />
-    <Compile Include="Models\AudioSearchSettings.cs" />
-    <Compile Include="Models\AuthData.cs" />
-    <Compile Include="Models\IParameters.cs" />
-    <Compile Include="Models\ParametersCollection.cs" />
-    <Compile Include="Models\Permissions.cs" />
-    <Compile Include="Models\Photos\FormUpload.cs" />
-    <Compile Include="Models\Photos\PhotoAlbumInfo.cs" />
-    <Compile Include="Models\Photos\PhotoInfo.cs" />
-    <Compile Include="Models\Photos\PhotoSizeInfo.cs" />
-    <Compile Include="Models\Photos\PhotoUploadResult.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="VkAPI.cs" />
-    <Compile Include="VkAPI.Photos.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Views\" />
+    <None Include="App.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

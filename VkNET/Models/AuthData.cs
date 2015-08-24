@@ -14,6 +14,7 @@ namespace VkNET.Models
         public long ExpiresIn { get; set; }
         public long UserId { get; set; }
         public DateTime ExpiresAt { get; set; }
+        public List<string> Permissions { get; set; }
 
     }
 }

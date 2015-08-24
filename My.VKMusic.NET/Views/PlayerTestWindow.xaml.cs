@@ -315,7 +315,7 @@ namespace My.VKMusic.Views
             this.IsLoading = true;
             BackgroundWorker loader = new BackgroundWorker();
             loader.DoWork += (s2, e2) => { audioSource.Load(); };
-            loader.RunWorkerCompleted += (s2, e2) => {
+            loader.RunWorkerCompleted += (s2, e2) => {                
                 IsLoading = false;
                 ReloadItems();
                 LoadItems();

@@ -23,6 +23,13 @@ namespace VkNET.ConsoleTest
             vk.DoAuth(() =>
             {
                 Console.WriteLine("Auth OK");
+                var albums = vk.Photos_GetAlbums();
+                var photos = vk.Photos_Get(albums[0]);
+                foreach (var p in photos)
+                {
+                    Console.WriteLine(p);
+                }
+                return;
                 Stopwatch sw = new Stopwatch();
                 sw.Start();
                 int total = 0;

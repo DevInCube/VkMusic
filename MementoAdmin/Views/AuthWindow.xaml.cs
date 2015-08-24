@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
-using System.Web;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -18,21 +16,20 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using VkNET.Models;
 
-namespace My.VKMusic.Views
+namespace MementoAdmin.Views
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for AuthWindow.xaml
     /// </summary>
     public partial class AuthWindow : Window
     {
-
         private bool isSilent = false;
         public event Action<AuthData> GotAccessToken;
 
         public AuthWindow()
         {
             InitializeComponent();
-            
+
             this.browser.Navigated += browser_Navigated;
         }
 

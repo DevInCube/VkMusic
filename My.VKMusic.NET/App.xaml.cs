@@ -25,7 +25,13 @@ namespace My.VKMusic.NET
         
         private void Application_Startup(object sender, StartupEventArgs e)
         {
-            Window test = new Player2();
+            vk.DoAuth(() =>
+            {
+                string res = vk.VideoGet(15929884, "15929884_171421954");
+                return;
+            });            
+            return;
+            Window test = new PlayerTestWindow();
             test.Show();
             return;
 
@@ -35,7 +41,7 @@ namespace My.VKMusic.NET
             BackgroundWorker loader = new BackgroundWorker();
             loader.DoWork += (sender2, e2) =>
             {
-                var vk2 = e2.Argument as VkAPI;
+                var vk2 = e2.Argument as VkAPI;                
                 var audios = new List<AudioFileInfo>();// vk2.AudioGet();
                 e2.Result = audios;
             };

@@ -1,0 +1,124 @@
+﻿<Window x:Class="MementoAdmin.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:conv="clr-namespace:MementoAdmin.Views.Converters"
+        Title="MainWindow" Height="700" Width="650"
+        Name="this"
+        WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <conv:BooleanConverter x:Key="boolConv"/>
+    </Window.Resources>
+    <Grid>
+        <TabControl SelectedIndex="{Binding SelectedTabIndex}">
+            <TabItem Header="Auth">
+                <Grid Background="SteelBlue">
+                    <Border CornerRadius="2" Background="White" VerticalAlignment="Center" HorizontalAlignment="Center" Width="200" Height="100">
+                        <Border.Effect>
+                            <DropShadowEffect Direction="270" Opacity="0.5" BlurRadius="2" ShadowDepth="3" />
+                        </Border.Effect>
+                        <Button Content="Log in" Command="{Binding LogInCommand}" CommandParameter="{Binding ElementName=this}" VerticalAlignment="Center" HorizontalAlignment="Center" Height="26" Width="75"></Button>
+                    </Border>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Photos" IsEnabled="{Binding LoggedIn}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="134*"/>
+                        <ColumnDefinition Width="373*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <DockPanel>
+                        <Grid Background="SteelBlue" DockPanel.Dock="Top">
+                            <Label Foreground="White" FontWeight="Bold" Content="Albums"/>
+                        </Grid>
+                    
+                        <DockPanel>
+                            <Grid DockPanel.Dock="Top">
+                                <Button Content="Create album" Command="{Binding CreatePhotoAlbumCommand}" CommandParameter="{Binding ElementName=this}" Height="30"/>
+                            </Grid>
+                            <ListBox ItemsSource="{Binding Albums}"
+                                 SelectedItem="{Binding SelectedAlbum}">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <DockPanel Height="64">
+                                            <Image Source="{Binding ThumbImage}" DockPanel.Dock="Left" Margin="5"></Image>
+                                            <TextBlock FontSize="16" Text="{Binding AlbumInfo.Title}" VerticalAlignment="Top"/>
+                                        </DockPanel>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </DockPanel>
+                        
+                    </DockPanel>
+
+                    <Grid Grid.Column="1" IsEnabled="{Binding SelectedAlbum, Converter={StaticResource boolConv}}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="21*"/>
+                            <RowDefinition Height="11*"/>
+                        </Grid.RowDefinitions>
+
+                        <DockPanel >
+                            <Grid Background="SteelBlue" DockPanel.Dock="Top">
+                                <StackPanel Orientation="Horizontal">
+                                    <Label Foreground="White" FontWeight="Bold" Content="{Binding SelectedAlbum.AlbumInfo.Title}"/>
+                                    <Label Foreground="White" FontWeight="Bold" Content="photos"/>
+                                </StackPanel>
+                            </Grid>
+                            <Button Content="Upload photos" Command="{Binding UploadPhotosCommand}" DockPanel.Dock="Top" Height="30"/>
+                            <ListBox x:Name="photos" 
+                                     ItemsSource="{Binding SelectedAlbum.Photos}"
+                                     SelectedItem="{Binding SelectedPhoto}">
+                                <ListBox.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel IsItemsHost="True" MaxWidth="{Binding ElementName=photos, Path=ActualWidth }" />
+                                    </ItemsPanelTemplate>
+                                </ListBox.ItemsPanel>
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid Background="LightGray" Margin="5">
+                                            <Image Source="{Binding ThumbImage}" Stretch="UniformToFill" Width="120" Height="80" />
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </DockPanel>
+
+                        <Grid Grid.Row="1" IsEnabled="{Binding SelectedPhoto, Converter={StaticResource boolConv}}">
+                            <DockPanel>
+                                <Grid DockPanel.Dock="Top" Background="LightGray">
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="5">
+                                        <Button Content="Make cover" Command="{Binding PhotoMakeCoverCommand}" Height="26" Width="75" Margin="5,0,0,0"></Button>
+                                        <Button Content="Remove" Command="{Binding PhotoRemoveCommand}" Height="26" Width="75" Margin="5,0,0,0"></Button>
+                                    </StackPanel>
+                                </Grid>
+                                <DataGrid ItemsSource="{Binding SelectedPhoto.PhotoInfo.Sizes}" SelectionUnit="Cell"/>
+                            </DockPanel>                           
+                        </Grid>
+
+                    </Grid>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Audio" IsEnabled="{Binding LoggedIn}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="569*"/>
+                    </Grid.RowDefinitions>
+
+                    <Grid Background="SteelBlue">
+                        <StackPanel>
+                            <DockPanel Margin="5" Height="26" VerticalAlignment="Top" >
+                                <Button Content="Search" Command="{Binding SearchCommand}" Width="75" DockPanel.Dock="Right"></Button>
+                                <TextBox Text="{Binding AudioSearch}"></TextBox>
+                            </DockPanel>
+                        </StackPanel>
+                    </Grid>
+
+                    <DataGrid SelectionUnit="Cell" Background="Gray" Grid.Row="1" ItemsSource="{Binding AudioResults}">
+                        
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "My.VKMusic.NET", "My.VKMusic.NET\My.VKMusic.NET.csproj", "{63991E38-33B5-4475-BDDD-1AFEF4B3F42D}"
 EndProject
@@ -10,6 +10,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VkNET.ConsoleTest", "VkNET.ConsoleTest\VkNET.ConsoleTest.csproj", "{FE5E0F3F-782A-4238-8787-61809D9B7E13}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "My.VkMusic.Core", "My.VkMusic.Core\My.VkMusic.Core.csproj", "{16607678-F55E-433E-98FB-34AF3256314B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MementoAdmin", "MementoAdmin\MementoAdmin.csproj", "{D8C0A8E7-AD52-47B0-9C1C-898F0D908005}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{16607678-F55E-433E-98FB-34AF3256314B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{16607678-F55E-433E-98FB-34AF3256314B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{16607678-F55E-433E-98FB-34AF3256314B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D8C0A8E7-AD52-47B0-9C1C-898F0D908005}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D8C0A8E7-AD52-47B0-9C1C-898F0D908005}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D8C0A8E7-AD52-47B0-9C1C-898F0D908005}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D8C0A8E7-AD52-47B0-9C1C-898F0D908005}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
